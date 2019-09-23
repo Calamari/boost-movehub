@@ -7,6 +7,7 @@ const HubAttachedMessage = require("./messages/HubAttachedMessage");
 const PortValueSingleMessage = require("./messages/PortValueSingleMessage");
 const UnknownMessage = require("./messages/UnknownMessage");
 const HubAction = require("./messages/HubAction");
+const PortInputFormatSetup = require("./messages/PortInputFormatSetup");
 
 const DEFAULT_OPTIONS = {
   logger: {},
@@ -58,9 +59,10 @@ module.exports = class Hub extends EventEmitter {
 
   subscribeToAllPorts() {
     this._log("debug", `Subscribing to all ports.`);
-    this.ports.get(MovehubPorts.PORT_TILT).subscribe(data => {
-      console.log("TILT:", data);
-    });
+    this.sendMessage(PortInputFormatSetup.build(MovehubPorts.PORT_TILT));
+    // this.ports.get(MovehubPorts.PORT_TILT).subscribe(data => {
+    //   console.log("TILT:", data);
+    // });
   }
 
   disconnect() {
@@ -184,6 +186,7 @@ module.exports = class Hub extends EventEmitter {
         this.subscribeToAllPorts();
       }
     } else if (msg instanceof PortValueSingleMessage) {
+      this._log("debug", `Got value: ${msg.toString()}`);
       // this.parseSensor(data);
     } else if (msg instanceof PortOutputCommandFeedbackMessage) {
       /**

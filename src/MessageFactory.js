@@ -5,6 +5,7 @@ const GenericError = require("./messages/GenericError");
 const PortOutputCommandFeedbackMessage = require("./messages/PortOutputCommandFeedbackMessage");
 const PortValueSingleMessage = require("./messages/PortValueSingleMessage");
 const UnknownMessage = require("./messages/UnknownMessage");
+const PortInputFormat = require("./messages/PortInputFormat");
 
 module.exports = {
   mapping: {
@@ -13,7 +14,8 @@ module.exports = {
     [HubAttachedMessage.TYPE]: HubAttachedMessage,
     [GenericError.TYPE]: GenericError,
     [PortOutputCommandFeedbackMessage.TYPE]: PortOutputCommandFeedbackMessage,
-    [PortValueSingleMessage.TYPE]: PortValueSingleMessage
+    [PortValueSingleMessage.TYPE]: PortValueSingleMessage,
+    [PortInputFormat.TYPE]: PortInputFormat
   },
 
   /**

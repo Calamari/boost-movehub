@@ -2,6 +2,8 @@ const DeviceMessage = require("./DeviceMessage");
 
 /**
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-alerts
+ *
+ * TODO: Test receiving them
  */
 class HubAlerts extends DeviceMessage {}
 
