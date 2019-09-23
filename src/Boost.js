@@ -1,97 +1,108 @@
-const { EventEmitter } = require('events');
-const noble = require('noble');
+const { EventEmitter } = require("events");
+const noble = require("noble");
 
-const Hub = require('./Hub')
+const Hub = require("./Hub");
 
-const NOBLE_POWERED_ON = 'poweredOn'
+const NOBLE_POWERED_ON = "poweredOn";
 
 const DEFAULT_OPTIONS = {
   logger: {}
-}
+};
 
 module.exports = class Boost extends EventEmitter {
   constructor(hubAddressOrUuid, options = DEFAULT_OPTIONS) {
-    super()
-    this.hubAddressOrUuid = hubAddressOrUuid
-    this.wantsSearch = false
-    this.logger = options.logger || {}
+    super();
+    this.hubAddressOrUuid = hubAddressOrUuid;
+    this.wantsSearch = false;
+    this.logger = options.logger || {};
 
-    this.initNoble()
+    this.initNoble();
   }
 
   initNoble() {
-    noble.on('stateChange', state => {
-      if (state === 'poweredOn') {
+    noble.on("stateChange", state => {
+      if (state === "poweredOn") {
         if (this.wantsSearch) {
-          this.startScanning()
+          this.startScanning();
         }
       } else {
-        this.stopScanning()
+        this.stopScanning();
       }
-    })
+    });
 
-    noble.on('discover', peripheral => {
-      this.onDiscover(peripheral)
-    })
+    noble.on("discover", peripheral => {
+      this.onDiscover(peripheral);
+    });
   }
 
   startScanning() {
-    this.wantsSearch = true
+    this.wantsSearch = true;
     if (noble.state === NOBLE_POWERED_ON) {
-      this._log('debug', "start scanning …")
-      noble.startScanning()
+      this._log("debug", "start scanning …");
+      noble.startScanning();
     }
   }
 
   stopScanning() {
-    this.wantsSearch = false
-    this._log('debug', 'stop scanning')
-    noble.stopScanning()
+    this.wantsSearch = false;
+    this._log("debug", "stop scanning");
+    noble.stopScanning();
   }
 
   onDiscover(peripheral) {
     // this._log('debug', peripheral)
-    this._log('debug', 'Discovered', peripheral.advertisement.localName, 'with address', peripheral.address, peripheral.addressType, `(${peripheral.uuid}).`)
-    if (this.hubAddressOrUuid === peripheral.address || this.hubAddressOrUuid === peripheral.uuid) {
-      this.createHub(peripheral)
+    this._log(
+      "debug",
+      "Discovered",
+      peripheral.advertisement.localName,
+      "with address",
+      peripheral.address,
+      peripheral.addressType,
+      `(${peripheral.uuid}).`
+    );
+    if (
+      this.hubAddressOrUuid === peripheral.address ||
+      this.hubAddressOrUuid === peripheral.uuid
+    ) {
+      this.createHub(peripheral);
     } else {
-      this._log('debug', 'Not this one.')
-    } 
+      this._log("debug", "Not this one.");
+    }
   }
 
   createHub(peripheral) {
-    this.hub = new Hub(peripheral, { logger: this.logger })
+    this.hub = new Hub(peripheral, { logger: this.logger });
 
-    this.hub.on('error', err => {
-      this._log('error', 'Hub produces error:', err)
-    })
+    this.hub.on("error", err => {
+      this._log("error", "Hub produces error:", err);
+      this.emit("error", err);
+    });
 
-    this.hub.on('connect', err => {
+    this.hub.on("connect", err => {
       if (err) {
-        this._log('error', 'Failed to connect to hub.', err)
-        return
+        this._log("error", "Failed to connect to hub.", err);
+        return;
       }
 
-      this._log('debug', 'Connected to hub.')
-      this.stopScanning()
+      this._log("debug", "Connected to hub.");
+      this.stopScanning();
 
       /**
        * @event Boost#hubConnected
        * @param hub {Hub} The hub that just connected.
        */
-      this.emit('hubConnected', this.hub)
-    })
+      this.emit("hubConnected", this.hub);
+    });
 
-    this.hub.on('disconnect', () => {
-      this._log('debug', `Disconnected from hub ${this.hub.uuid}.`)
+    this.hub.on("disconnect", () => {
+      this._log("debug", `Disconnected from hub ${this.hub.uuid}.`);
 
-      console.log('searching for new hub')
-      this.startScanning()
-    })
+      console.log("searching for new hub");
+      this.startScanning();
+    });
   }
 
   _log(type, ...message) {
-    this.logger[type] && this.logger[type]('[Boost]', ...message)
+    this.logger[type] && this.logger[type]("[Boost]", ...message);
   }
-}
-  
+};
