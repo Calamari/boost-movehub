@@ -195,9 +195,9 @@ module.exports = class Hub extends EventEmitter {
        */
       // this.emit('port', {port: this.num2port[data[3]], action: this.num2action[data[4]]});
     } else if (msg instanceof UnknownMessage) {
-      this._log("warn", `Unknown message type 0x${msg.type.toString(16)}`);
+      this._log("warn", `Unknown message ${msg.toString()}`);
     } else {
-      this._log("debug", `Unprocessed message ${typeof msg}`);
+      this._log("debug", `Unprocessed message ${msg.toString()}`);
     }
   }
 

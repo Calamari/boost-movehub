@@ -16,4 +16,8 @@ module.exports = class DeviceMessage {
   get type() {
     return this.data[2];
   }
+
+  toString() {
+    return `type 0x${this.type.toString(16)}`;
+  }
 };
