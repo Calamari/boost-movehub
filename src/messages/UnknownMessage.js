@@ -1,4 +1,3 @@
-const DeviceMessage = require('./DeviceMessage')
+const DeviceMessage = require("./DeviceMessage");
 
-module.exports = class UnknownMessage extends DeviceMessage {
-}
+module.exports = class UnknownMessage extends DeviceMessage {};

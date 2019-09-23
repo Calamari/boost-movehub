@@ -1,3 +1,5 @@
+const HubAction = require("./messages/HubAction");
+const HubAlert = require("./messages/HubAlert");
 const HubAttachedMessage = require("./messages/HubAttachedMessage");
 const GenericError = require("./messages/GenericError");
 const PortOutputCommandFeedbackMessage = require("./messages/PortOutputCommandFeedbackMessage");
@@ -6,6 +8,8 @@ const UnknownMessage = require("./messages/UnknownMessage");
 
 module.exports = {
   mapping: {
+    [HubAction.TYPE]: HubAction,
+    [HubAlert.TYPE]: HubAlert,
     [HubAttachedMessage.TYPE]: HubAttachedMessage,
     [GenericError.TYPE]: GenericError,
     [PortOutputCommandFeedbackMessage.TYPE]: PortOutputCommandFeedbackMessage,

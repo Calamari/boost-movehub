@@ -3,7 +3,32 @@ const DeviceMessage = require("./DeviceMessage");
 /**
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-actions
  */
-class HubAction extends DeviceMessage {}
+class HubAction extends DeviceMessage {
+  toString() {
+    return `HubAction ${this._typeToString()}`;
+  }
+
+  _typeToString() {
+    switch (this.type) {
+      case HubAction.SWITCH_OFF_HUB:
+        return "Switch off";
+      case HubAction.DISCONNECT:
+        return "Disconnect";
+      case HubAction.VCC_PORT_CONTROL_ON:
+        return "VCC port control on";
+      case HubAction.VCC_PORT_CONTROL_OFF:
+        return "VCC port control off";
+      case HubAction.BUSY_INDICATOR_ON:
+        return "Busy Indicator On";
+      case HubAction.BUSY_INDICATOR_OFF:
+        return "Busy Indicator Off";
+      case HubAction.IMMEDIATE_SHUTDOWN:
+        return "Shutting down immediate";
+      default:
+        return "Unknown Action";
+    }
+  }
+}
 
 /**
  * Instanties a proper HubAction to send to Hub
@@ -11,10 +36,10 @@ class HubAction extends DeviceMessage {}
  * @param {number} actionType
  */
 HubAction.build = function build(actionType) {
-  return new HubAction(Buffer.from([0x04, 0x00, HubAction.Type, actionType]));
+  return new HubAction(Buffer.from([0x04, 0x00, HubAction.TYPE, actionType]));
 };
 
-HubAction.Type = 0x02;
+HubAction.TYPE = 0x02;
 
 HubAction.SWITCH_OFF_HUB = 0x01;
 HubAction.DISCONNECT = 0x02;

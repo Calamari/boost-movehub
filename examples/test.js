@@ -5,7 +5,10 @@ const boost = new Boost("001653aeb339", { logger: console });
 boost.on("hubConnected", hub => {
   console.log("hub connected");
 
-  hub.switchOff();
+  setTimeout(() => {
+    hub.switchOff();
+  }, 1000);
+  // hub.switchOff();
   // hub.led('green')
   setTimeout(() => {
     process.exit(0);
