@@ -1,3 +1,4 @@
+const { toHexString } = require("../helpers");
 /**
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#message-types
  */
@@ -18,6 +19,6 @@ module.exports = class DeviceMessage {
   }
 
   toString() {
-    return `type 0x${this.type.toString(16)}`;
+    return `type ${toHexString(this.type)}`;
   }
 };
