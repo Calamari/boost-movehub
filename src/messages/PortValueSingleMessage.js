@@ -1,4 +1,5 @@
 const DeviceMessage = require("./DeviceMessage");
+const { toHexString } = require("../helpers");
 
 /**
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-value-single
@@ -22,7 +23,7 @@ class PortValueSingleMessage extends DeviceMessage {
   }
 
   toString() {
-    const port = this.portId.toString(16);
+    const port = toHexString(this.portId);
     return `PortValueSingleMessage(port=${port}, value=${this.value})`;
   }
 }

@@ -1,4 +1,5 @@
 const DeviceMessage = require("./DeviceMessage");
+const { toHexString } = require("../helpers");
 
 /**
  * Upstream message as answer to PortInputFormat call
@@ -23,12 +24,12 @@ class PortInputFormat extends DeviceMessage {
   }
 
   toString() {
-    const portId = this.portId.toString(16);
-    const mode = this.mode.toString(16);
-    const delta = this.deltaInterval.toString(16);
+    const portId = toHexString(this.portId);
+    const mode = toHexString(this.mode);
+    const delta = toHexString(this.deltaInterval);
     const updates = this.notificationEnabled ? "true" : "false";
 
-    return `PortInfo(port=0x${portId}, mode=0x${mode}, delta=0x${delta}, updates=0x${updates})`;
+    return `PortInfoFormat(port=${portId}, mode=${mode}, delta=${delta}, updates=${updates})`;
   }
 }
 
