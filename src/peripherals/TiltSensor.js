@@ -18,8 +18,8 @@ class TiltSensor extends Peripheral {
   receiveMessage(msg) {
     switch (this.mode) {
       case TiltSensor.MODE_2AXIS_ANGLE: {
-        const roll = msg.value >> 8; // first byte
-        const pitch = msg.value % 256; // second byte
+        const roll = msg.paload[0];
+        const pitch = msg.payload[1];
         this.lastValue = {
           roll,
           pitch

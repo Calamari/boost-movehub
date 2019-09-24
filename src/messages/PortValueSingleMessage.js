@@ -11,6 +11,17 @@ class PortValueSingleMessage extends DeviceMessage {
     return this.data[3];
   }
 
+  get payload() {
+    switch (this.length) {
+      case 5:
+        return [this.data[4]];
+      case 6:
+        return [this.data[4], this.data[5]];
+      case 8:
+        return [this.data[4], this.data[5], this.data[6], this.data[7]];
+    }
+  }
+
   get value() {
     switch (this.length) {
       case 5:
