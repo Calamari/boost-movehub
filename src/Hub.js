@@ -59,7 +59,12 @@ module.exports = class Hub extends EventEmitter {
 
   subscribeToAllPorts() {
     this._log("debug", `Subscribing to all ports.`);
-    this.sendMessage(PortInputFormatSetup.build(MovehubPorts.PORT_TILT));
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_TILT).subscribe());
+    // this.ports
+    //   .get(MovehubPorts.PORT_TILT)
+    //   .on("data", data => this.emit("tilt", data));
+    // this.sendMessage(PortInputFormatSetup.build(MovehubPorts.PORT_CURRENT));
+    // this.sendMessage(PortInputFormatSetup.build(MovehubPorts.PORT_VOLTAGE));
     // this.ports.get(MovehubPorts.PORT_TILT).subscribe(data => {
     //   console.log("TILT:", data);
     // });
@@ -183,11 +188,27 @@ module.exports = class Hub extends EventEmitter {
          */
         this.emit("connect");
         this.connected = true;
-
-        this.subscribeToAllPorts();
       }
     } else if (msg instanceof PortValueSingleMessage) {
       this._log("debug", `Got value: ${msg.toString()}`);
+      const peripheral = this.ports.get(msg.portId);
+      if (peripheral) {
+        if (peripheral.receiveMessage) {
+          peripheral.receiveMessage(msg);
+          this.emit("tilt", peripheral.lastValue);
+        } else {
+          this._log(
+            "warn",
+            `Undefined method .receiveMessage for peripheral ${peripheral}`
+          );
+        }
+      } else {
+        this._log(
+          "warn",
+          `Received message for unregistered port ${msg.portId}`,
+          msg.toString()
+        );
+      }
       // this.parseSensor(data);
     } else if (msg instanceof PortOutputCommandFeedbackMessage) {
       /**

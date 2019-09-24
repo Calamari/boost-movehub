@@ -1,6 +1,7 @@
 class Peripheral {
-  constructor(ioType) {
+  constructor(ioType, portId) {
     this.ioType = ioType;
+    this.portId = portId;
   }
 }
 
