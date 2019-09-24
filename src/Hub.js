@@ -125,6 +125,7 @@ module.exports = class Hub extends EventEmitter {
             "Error in services and characteristics discovery.",
             err
           );
+          this.emit("error", err);
         }
 
         services.forEach(service => {
@@ -138,7 +139,7 @@ module.exports = class Hub extends EventEmitter {
             this.characteristic = c;
 
             c.on("data", data =>
-              this._processMessage(MessageFactory.create(data))
+              this._receiveMessage(MessageFactory.create(data))
             );
             c.subscribe((err, data) => {
               if (err) {
@@ -158,7 +159,7 @@ module.exports = class Hub extends EventEmitter {
    *
    * @param {DeviceMessage} msg
    */
-  _processMessage(msg) {
+  _receiveMessage(msg) {
     this._log("debug", "Parse data:", msg && msg.data);
 
     // TODO: Add timeout for not registering all needed devices in time.
