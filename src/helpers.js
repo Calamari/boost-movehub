@@ -1,5 +1,6 @@
 function toHexString(nr) {
-  return `0x${nr.toString(16)}`;
+  const zeroPad = nr < 16 ? "0" : "";
+  return `0x${zeroPad}${nr.toString(16)}`;
 }
 
 module.exports = {
