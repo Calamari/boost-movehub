@@ -7,9 +7,12 @@ const PortInputFormat = require("./PortInputFormat");
 class PortInputFormatSetup extends PortInputFormat {}
 
 /**
- * Instanties a proper PortInputFormatSetup to send to Hub
+ * Instantiates a proper PortInputFormatSetup to send to Hub
  *
  * @param {number} portId
+ * @param {number} options.mode
+ * @param {number} options.deltaInterval Interval of messages (in what exactly? ms?)
+ * @param {number} options.notificationEnabled Defines if messages should be send back on a regular base.
  */
 PortInputFormatSetup.build = function build(portId, options = {}) {
   const mode = options.mode || 0x00;

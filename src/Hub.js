@@ -79,6 +79,18 @@ module.exports = class Hub extends EventEmitter {
     this.sendMessage(HubAction.build(HubAction.SWITCH_OFF_HUB));
   }
 
+  led(color) {
+    console.log(
+      "send",
+      this.ports.get(MovehubPorts.PORT_LED).setColor(color).data
+    );
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setColor(color));
+  }
+
+  ledRGB(...rgb) {
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setRGBColor(...rgb));
+  }
+
   sendMessage(msg, callback = null) {
     this.characteristic.write(msg.data, true, (...args) => {
       this._log("silly", "Callback from write", args);
