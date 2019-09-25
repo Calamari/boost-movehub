@@ -1,21 +1,27 @@
 const Peripheral = require("./Peripheral");
 const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
+const { toHexString } = require("../helpers");
 
 class TiltSensor extends Peripheral {
-  constructor(ioType, portId) {
-    super(ioType, portId);
+  constructor(ioType, portId, options = undefined) {
+    super(ioType, portId, options);
+    this.displayName = "TiltSensor";
     this.lastValue = null;
     this.mode = TiltSensor.MODE_2AXIS_ANGLE;
   }
 
   /**
-   * Creates a message that starts subscribing to updates
+   * Creates a message that starts subscribing to updates.
    */
   subscribe() {
     return PortInputFormatSetup.build(this.portId, { mode: this.mode });
   }
 
-  receiveMessage(msg) {
+  /**
+   * Receives nd processes message with value from sensor.
+   * @param {PortValueSingleMessage} msg
+   */
+  receiveValue(msg) {
     switch (this.mode) {
       case TiltSensor.MODE_2AXIS_ANGLE: {
         const roll = msg.paload[0];
@@ -55,6 +61,12 @@ class TiltSensor extends Peripheral {
         break;
       }
       default:
+        this._log(
+          "warn",
+          `Received message while being in an unexpected mode=${toHexString(
+            this.mode
+          )}`
+        );
       // TODO: add real logger and log a warning here of unexpected mode
     }
   }

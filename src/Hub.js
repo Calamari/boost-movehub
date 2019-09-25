@@ -7,6 +7,7 @@ const HubAttachedMessage = require("./messages/HubAttachedMessage");
 const PortValueSingleMessage = require("./messages/PortValueSingleMessage");
 const UnknownMessage = require("./messages/UnknownMessage");
 const HubAction = require("./messages/HubAction");
+const PortInputFormat = require("./messages/PortInputFormat");
 const PortInputFormatSetup = require("./messages/PortInputFormatSetup");
 
 const DEFAULT_OPTIONS = {
@@ -193,13 +194,13 @@ module.exports = class Hub extends EventEmitter {
       this._log("debug", `Got value: ${msg.toString()}`);
       const peripheral = this.ports.get(msg.portId);
       if (peripheral) {
-        if (peripheral.receiveMessage) {
-          peripheral.receiveMessage(msg);
+        if (peripheral.receiveValue) {
+          peripheral.receiveValue(msg);
           this.emit("tilt", peripheral.lastValue);
         } else {
           this._log(
             "warn",
-            `Undefined method .receiveMessage for peripheral ${peripheral}`
+            `Undefined method .receiveValue for peripheral ${peripheral}`
           );
         }
       } else {

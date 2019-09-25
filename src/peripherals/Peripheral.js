@@ -1,7 +1,18 @@
+const DEFAULT_OPTIONS = {
+  logger: {}
+};
+
 class Peripheral {
-  constructor(ioType, portId) {
+  constructor(ioType, portId, options = DEFAULT_OPTIONS) {
+    this.displayName = "Peripheral";
     this.ioType = ioType;
     this.portId = portId;
+    this.logger = options.logger || {};
+  }
+
+  _log(type, ...message) {
+    this.logger[type] &&
+      this.logger[type](`"[${this.displayName}]"`, ...message);
   }
 }
 

@@ -1,8 +1,13 @@
 const PeripheralFactory = require("./PeripheralFactory");
 
+const DEFAULT_OPTIONS = {
+  logger: {}
+};
+
 class MovehubPorts {
-  constructor() {
+  constructor(options = DEFAULT_OPTIONS) {
     this.registry = {};
+    this.logger = options.logger || {};
   }
 
   registerFromMessage(msg) {
@@ -40,6 +45,10 @@ class MovehubPorts {
 
   containsAll(deviceList = []) {
     return deviceList.every(portId => this.registry[portId]);
+  }
+
+  _log(type, ...message) {
+    this.logger[type] && this.logger[type]("[Ports]", ...message);
   }
 }
 
