@@ -1,6 +1,7 @@
 const DeviceMessage = require("./DeviceMessage");
 
 /**
+ * Up- & Downstream messages for control actions on connected Hub.
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-actions
  */
 class HubAction extends DeviceMessage {
@@ -21,9 +22,15 @@ class HubAction extends DeviceMessage {
       case HubAction.BUSY_INDICATOR_ON:
         return "Busy Indicator On";
       case HubAction.BUSY_INDICATOR_OFF:
-        return "Busy Indicator Off";
+        return "Busy Indicator off";
       case HubAction.IMMEDIATE_SHUTDOWN:
         return "Shutting down immediate";
+      case HubAction.HUB_WILL_SWITCH_OFF:
+        return "Hub will switch off";
+      case HubAction.HUB_WILL_DISCONNECT:
+        return "Hub will disconnect";
+      case HubAction.HUB_WILL_GO_INTO_BOOT_MODE:
+        return "Hub will go into Boot Mode";
       default:
         return "Unknown Action";
     }
@@ -48,5 +55,10 @@ HubAction.VCC_PORT_CONTROL_OFF = 0x04;
 HubAction.BUSY_INDICATOR_ON = 0x05;
 HubAction.BUSY_INDICATOR_OFF = 0x06;
 HubAction.IMMEDIATE_SHUTDOWN = 0x2f;
+
+// Upstream only
+HubAction.HUB_WILL_SWITCH_OFF = 0x30;
+HubAction.HUB_WILL_DISCONNECT = 0x31;
+HubAction.HUB_WILL_GO_INTO_BOOT_MODE = 0x32;
 
 module.exports = HubAction;
