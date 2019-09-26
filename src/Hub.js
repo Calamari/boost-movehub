@@ -10,6 +10,8 @@ const HubAction = require("./messages/HubAction");
 const PortInputFormat = require("./messages/PortInputFormat");
 const PortInputFormatSetup = require("./messages/PortInputFormatSetup");
 
+const Motor = require("./peripherals/Motor");
+
 const DEFAULT_OPTIONS = {
   logger: {},
   neededDevices: [],
@@ -79,6 +81,10 @@ module.exports = class Hub extends EventEmitter {
     this.sendMessage(HubAction.build(HubAction.SWITCH_OFF_HUB));
   }
 
+  immediateShutdown() {
+    this.sendMessage(HubAction.build(HubAction.IMMEDIATE_SHUTDOWN));
+  }
+
   /**
    * Sends message to activate/deactivate main LED with given color.
    *
@@ -102,7 +108,7 @@ module.exports = class Hub extends EventEmitter {
    * @param {number} dutyCycle
    */
   startMotorD(dutyCycle) {
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).start(dutyCycle));
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).startPower(dutyCycle));
   }
 
   /**
@@ -112,7 +118,22 @@ module.exports = class Hub extends EventEmitter {
     this.sendMessage(this.ports.get(MovehubPorts.PORT_D).stop());
   }
 
+  turnMotorD() {
+    this.sendMessage(
+      this.ports
+        .get(MovehubPorts.PORT_D)
+        .startSpeedForDegrees(
+          360,
+          50,
+          100,
+          Motor.END_STATE_BREAK,
+          Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+        )
+    );
+  }
+
   sendMessage(msg, callback = null) {
+    this._log("debug", "Sending message", msg.data);
     this.characteristic.write(msg.data, true, (...args) => {
       this._log("silly", "Callback from write", args);
       callback && callback(...args);
@@ -172,7 +193,7 @@ module.exports = class Hub extends EventEmitter {
         });
 
         characteristics.forEach(c => {
-          this._log("info", "Characteristic found.", c.uuid);
+          this._log("info", "Characteristic found.", c.uuid, c);
 
           if (c.uuid === LEGO_CHARACTERISTIC) {
             this.characteristic = c;

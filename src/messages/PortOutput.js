@@ -1,4 +1,5 @@
 const DeviceMessage = require("./DeviceMessage");
+const { encodeFlags } = require("../helpers");
 
 /**
  * Downstream message to make peripherals do something.
@@ -18,21 +19,15 @@ PortOutput.buildWriteDirectModeData = function buildWriteDirectModeData(
   startupCompletionFlags,
   payload
 ) {
-  if (typeof startupCompletionFlags !== "number") {
-    console.log(typeof startupCompletionFlags);
-    startupCompletionFlags = startupCompletionFlags.reduce(
-      (memo, flag) => memo | flag,
-      0
-    );
-  }
   const length = 6 + payload.length;
+
   return new PortOutput(
     Buffer.from([
       length,
       0x00,
       PortOutput.TYPE,
       portId,
-      startupCompletionFlags,
+      encodeFlags(startupCompletionFlags),
       PortOutput.SUB_CMD_WRITE_DIRECT_MODE_DATA,
       ...payload
     ])
@@ -43,12 +38,21 @@ PortOutput.buildWriteDirectModeData = function buildWriteDirectModeData(
  * Instantiates a proper PortOutput to send to Hub
  *
  * @param {number} portId
+ * @param {number[] | number} startupCompletionFlags Bitlist containing flags as defined in Startup and Completion Information or array of flags to set (Available flags: `PortOutput.SC_FLAGS`)
  * @param {number[]} payload Bytes of data to send
  */
-PortOutput.build = function build(portId, payload) {
-  const length = 4 + payload.length;
+PortOutput.build = function build(portId, startupCompletionFlags, payload) {
+  const length = 5 + payload.length;
+
   return new PortOutput(
-    Buffer.from([length, 0x00, PortOutput.TYPE, portId, ...payload])
+    Buffer.from([
+      length,
+      0x00,
+      PortOutput.TYPE,
+      portId,
+      encodeFlags(startupCompletionFlags),
+      ...payload
+    ])
   );
 };
 

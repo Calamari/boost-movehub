@@ -37,6 +37,8 @@ class Motor extends Peripheral {
    *
    * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0c
    *
+   * FIXME: It does not stop spinning. So why the heck does degrees do not work?
+   *
    * @param {number} degrees [-10000000..10000000] Degrees to turn
    * @param {number} speed [0..100]
    * @param {number} maxPower [0..100]
@@ -56,7 +58,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.build(
       this.portId,
-
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       [
         Motor.SUB_CMD_START_POWER_FOR_DEGREES,
         ...int32ToArray(degrees),

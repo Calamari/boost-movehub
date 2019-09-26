@@ -12,13 +12,16 @@ boost.on("hubConnected", hub => {
 
   // hub.led(COLOR_RED);
 
-  hub.startMotorD(20);
-  setTimeout(() => {
-    hub.startMotorD(-20);
-    setTimeout(() => {
-      hub.stopMotorD();
-    }, 500);
-  }, 500);
+  hub.turnMotorD(-90);
+
+  // hub.startMotorD(-20);
+  // setTimeout(() => {
+  //   hub.startMotorD(-20);
+  //   setTimeout(() => {
+  //     hub.stopMotorD();
+  //   }, 500);
+  // }, 500);
+
   // let g = 0;
   // const ledInt = setInterval(() => {
   //   hub.led(++g);
