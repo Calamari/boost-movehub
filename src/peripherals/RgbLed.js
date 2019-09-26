@@ -1,6 +1,5 @@
 const Peripheral = require("./Peripheral");
 const PortOutput = require("../messages/PortOutput");
-const { toHexString } = require("../helpers");
 
 const INDEX_MODE = 0x00;
 const RGB_MODE = 0x01;
@@ -50,11 +49,11 @@ class RgbLed extends Peripheral {
   }
 
   /**
-   * Receives nd processes message with value from sensor.
+   * Receives and processes message with value from sensor.
    * @param {PortValueSingleMessage} msg
    */
-  receiveValue(msg) {
-    this._log("warn", `.receiveValue not implemetned`);
+  receiveValue(_msg) {
+    this._log("info", `.receiveValue not implemetned`);
   }
 }
 

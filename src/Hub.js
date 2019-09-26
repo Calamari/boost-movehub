@@ -79,16 +79,37 @@ module.exports = class Hub extends EventEmitter {
     this.sendMessage(HubAction.build(HubAction.SWITCH_OFF_HUB));
   }
 
+  /**
+   * Sends message to activate/deactivate main LED with given color.
+   *
+   * @param {number} color
+   */
   led(color) {
-    console.log(
-      "send",
-      this.ports.get(MovehubPorts.PORT_LED).setColor(color).data
-    );
     this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setColor(color));
   }
 
+  /**
+   * TODO
+   * @param  {...any} rgb
+   */
   ledRGB(...rgb) {
     this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setRGBColor(...rgb));
+  }
+
+  /**
+   * Sends message to start a Motor on Port D.
+   *
+   * @param {number} dutyCycle
+   */
+  startMotorD(dutyCycle) {
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).start(dutyCycle));
+  }
+
+  /**
+   * Sends message to stop a Motor on Port D.
+   */
+  stopMotorD() {
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).stop());
   }
 
   sendMessage(msg, callback = null) {

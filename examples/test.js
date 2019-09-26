@@ -10,17 +10,24 @@ boost.on("hubConnected", hub => {
 
   // hub.subscribeToAllPorts();
 
-  hub.led(COLOR_RED);
+  // hub.led(COLOR_RED);
 
-  let g = 0;
-  const ledInt = setInterval(() => {
-    hub.led(++g);
-    // g += 25;
-    // hub.ledRGB(g, g, 255 - g);
+  hub.startMotorD(20);
+  setTimeout(() => {
+    hub.startMotorD(-20);
+    setTimeout(() => {
+      hub.stopMotorD();
+    }, 500);
   }, 500);
+  // let g = 0;
+  // const ledInt = setInterval(() => {
+  //   hub.led(++g);
+  //   // g += 25;
+  //   // hub.ledRGB(g, g, 255 - g);
+  // }, 500);
 
   setTimeout(() => {
-    clearInterval(ledInt);
+    // clearInterval(ledInt);
     hub.switchOff();
 
     setTimeout(() => {
