@@ -1,5 +1,6 @@
 const Peripheral = require("./Peripheral");
 const PortOutput = require("../messages/PortOutput");
+const { int32ToArray } = require("../helpers");
 
 class Motor extends Peripheral {
   constructor(ioType, portId, options = undefined) {
@@ -16,11 +17,10 @@ class Motor extends Peripheral {
    *
    * @param {number} dutyCycle [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
    */
-  start(dutyCycle) {
-    return PortOutput.build(
+  startPower(dutyCycle) {
+    return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
-      PortOutput.SUB_CMD_WRITE_DIRECT_MODE_DATA,
 
       [Motor.SUB_CMD_START_POWER, dutyCycle]
     );
@@ -30,7 +30,42 @@ class Motor extends Peripheral {
    * Creates stops message for motor.
    */
   stop() {
-    return this.start(0);
+    return this.startPower(0);
+  }
+
+  /**
+   *
+   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0c
+   *
+   * @param {number} degrees [-10000000..10000000] Degrees to turn
+   * @param {number} speed [0..100]
+   * @param {number} maxPower [0..100]
+   * @param {number} endState One of `Motor.END_STATE_*`
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`)
+   */
+  startSpeedForDegrees(
+    degrees,
+    speed,
+    maxPower,
+    endState = Motor.END_STATE_FLOAT,
+    useProfile = Motor.PROFILE_DO_NOT_USE
+  ) {
+    if (degrees < 0) {
+      degrees = -degrees;
+      speed = -speed;
+    }
+    return PortOutput.build(
+      this.portId,
+
+      [
+        Motor.SUB_CMD_START_POWER_FOR_DEGREES,
+        ...int32ToArray(degrees),
+        speed,
+        maxPower,
+        endState,
+        useProfile
+      ]
+    );
   }
 
   /**
@@ -43,5 +78,14 @@ class Motor extends Peripheral {
 }
 
 Motor.SUB_CMD_START_POWER = 0x01;
+Motor.SUB_CMD_START_POWER_FOR_DEGREES = 0x0b;
+
+Motor.END_STATE_FLOAT = 0;
+Motor.END_STATE_HOLD = 126;
+Motor.END_STATE_BREAK = 127;
+
+Motor.PROFILE_DO_NOT_USE = 0;
+Motor.PROFILE_ACCELERATION = 0b01;
+Motor.PROFILE_DEACCELERATION = 0b10;
 
 module.exports = Motor;

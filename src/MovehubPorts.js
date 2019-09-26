@@ -14,7 +14,7 @@ class MovehubPorts {
     this.registry[msg.portId] = PeripheralFactory.create(
       msg.ioType,
       msg.portId,
-      { logger: this.logger }
+      { logger: this.logger, ioMembers: msg.ioMembers }
     ) || {
       temp: "THIS IS TODO",
       ioType: msg.ioType,

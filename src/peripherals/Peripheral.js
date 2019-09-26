@@ -3,11 +3,18 @@ const DEFAULT_OPTIONS = {
 };
 
 class Peripheral {
+  /**
+   * @param {Number} ioType Peripheral Device Type ID (One of `Peripheral.DEV_*`)
+   * @param {Number} portId Port ID this peripheral is connected to
+   * @param {object} [options.ioMembers] If this has severeal members, it is a virtual device
+   * @param {object} [options.logger]
+   */
   constructor(ioType, portId, options = DEFAULT_OPTIONS) {
     this.displayName = "Peripheral";
     this.ioType = ioType;
     this.portId = portId;
     this.logger = options.logger || {};
+    this.isVirtualDevice = !!options.ioMembers;
   }
 
   _log(type, ...message) {

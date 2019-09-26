@@ -17,7 +17,8 @@ module.exports = {
    *
    * @param {Number} ioType
    * @param {Number} portId
-   * @param {object} ?options.logger
+   * @param {object} [options.ioMembers] If this has severeal members, it is a virtual device
+   * @param {object} [options.logger]
    * @returns {Peripheral | UnknownPeripheral} Returns an instance of DeviceMessage subclass, or null if message type is unknown to us
    */
   create(ioType, portId, options) {

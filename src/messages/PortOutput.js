@@ -7,17 +7,15 @@ const DeviceMessage = require("./DeviceMessage");
 class PortOutput extends DeviceMessage {}
 
 /**
- * Instantiates a proper PortOutput to send to Hub
+ * Instantiates a proper PortOutput to send to Hub encoded with writeDirectModeData
  *
  * @param {number} portId
  * @param {number[] | number} startupCompletionFlags Bitlist containing flags as defined in Startup and Completion Information or array of flags to set (Available flags: `PortOutput.SC_FLAGS`)
- * @param {number} subCommand Sub-Command to use (one of `PortOutput.SUB_CMD_*`)
  * @param {number[]} payload Bytes of data to send
  */
-PortOutput.build = function build(
+PortOutput.buildWriteDirectModeData = function buildWriteDirectModeData(
   portId,
   startupCompletionFlags,
-  subCommand,
   payload
 ) {
   if (typeof startupCompletionFlags !== "number") {
@@ -35,9 +33,22 @@ PortOutput.build = function build(
       PortOutput.TYPE,
       portId,
       startupCompletionFlags,
-      subCommand,
+      PortOutput.SUB_CMD_WRITE_DIRECT_MODE_DATA,
       ...payload
     ])
+  );
+};
+
+/**
+ * Instantiates a proper PortOutput to send to Hub
+ *
+ * @param {number} portId
+ * @param {number[]} payload Bytes of data to send
+ */
+PortOutput.build = function build(portId, payload) {
+  const length = 4 + payload.length;
+  return new PortOutput(
+    Buffer.from([length, 0x00, PortOutput.TYPE, portId, ...payload])
   );
 };
 
