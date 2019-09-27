@@ -1,8 +1,10 @@
+const { EventEmitter } = require("events");
+
 const DEFAULT_OPTIONS = {
   logger: {}
 };
 
-class Peripheral {
+class Peripheral extends EventEmitter {
   /**
    * @param {Number} ioType Peripheral Device Type ID (One of `Peripheral.DEV_*`)
    * @param {Number} portId Port ID this peripheral is connected to
@@ -10,6 +12,7 @@ class Peripheral {
    * @param {object} [options.logger]
    */
   constructor(ioType, portId, options = DEFAULT_OPTIONS) {
+    super();
     this.displayName = "Peripheral";
     this.ioType = ioType;
     this.portId = portId;

@@ -118,12 +118,12 @@ module.exports = class Hub extends EventEmitter {
     this.sendMessage(this.ports.get(MovehubPorts.PORT_D).stop());
   }
 
-  turnMotorD() {
+  turnMotorD(degrees) {
     this.sendMessage(
       this.ports
         .get(MovehubPorts.PORT_D)
         .startSpeedForDegrees(
-          360,
+          degrees,
           50,
           100,
           Motor.END_STATE_BREAK,
@@ -266,14 +266,14 @@ module.exports = class Hub extends EventEmitter {
       }
       // this.parseSensor(data);
     } else if (msg instanceof PortOutputCommandFeedbackMessage) {
-      /**
-       * Fires on port changes
-       * @event Hub#port
-       * @param port {object}
-       * @param port.port {string}
-       * @param port.action {string}
-       */
-      // this.emit('port', {port: this.num2port[data[3]], action: this.num2action[data[4]]});
+      this._log("info", "Got feedback:", msg.toString());
+      const data = msg.valuesForPorts;
+      Object.keys(data).forEach(portId => {
+        const peripheral = this.ports.get(portId);
+        if (peripheral.receiveFeedback) {
+          peripheral.receiveFeedback(data[portId]);
+        }
+      });
     } else if (msg instanceof UnknownMessage) {
       this._log("warn", `Unknown message ${msg.toString()}`);
     } else {

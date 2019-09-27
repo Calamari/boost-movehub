@@ -1,5 +1,6 @@
 const Peripheral = require("./Peripheral");
 const PortOutput = require("../messages/PortOutput");
+const PortOutputCommandFeedbackMessage = require("../messages/PortOutputCommandFeedbackMessage");
 const { int32ToArray } = require("../helpers");
 
 class Motor extends Peripheral {
@@ -36,8 +37,6 @@ class Motor extends Peripheral {
   /**
    *
    * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0c
-   *
-   * FIXME: It does not stop spinning. So why the heck does degrees do not work?
    *
    * @param {number} degrees [-10000000..10000000] Degrees to turn
    * @param {number} speed [0..100]
@@ -78,6 +77,29 @@ class Motor extends Peripheral {
   receiveValue(_msg) {
     this._log("info", `.receiveValue not implemetned`);
   }
+
+  /**
+   * Called with feedback from Hub.
+   *
+   * @param {number} value One of `PortOutputCommandFeedbackMessage.ACTION_*`
+   */
+  receiveFeedback(value) {
+    if (value === PortOutputCommandFeedbackMessage.ACTION_START) {
+      this.status = Motor.RUNNING;
+      /**
+       * Fires when Motor starts running.
+       * @event Motor#start
+       */
+      this.emit("start");
+    } else if (value === PortOutputCommandFeedbackMessage.ACTION_STOP) {
+      this.status = Motor.STOPPED;
+      /**
+       * Fires when Motor finished running.
+       * @event Motor#stop
+       */
+      this.emit("stop");
+    }
+  }
 }
 
 Motor.SUB_CMD_START_POWER = 0x01;
@@ -90,5 +112,8 @@ Motor.END_STATE_BREAK = 127;
 Motor.PROFILE_DO_NOT_USE = 0;
 Motor.PROFILE_ACCELERATION = 0b01;
 Motor.PROFILE_DEACCELERATION = 0b10;
+
+Motor.RUNNING = "running";
+Motor.STOPPED = "stopped";
 
 module.exports = Motor;
