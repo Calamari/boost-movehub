@@ -7,8 +7,8 @@ class Motor extends Peripheral {
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "Motor";
-    this.lastValue = null;
     this.mode = Motor.MODE_2AXIS_ANGLE;
+    this.status = Motor.STOPPED;
   }
 
   /**
@@ -36,7 +36,7 @@ class Motor extends Peripheral {
 
   /**
    *
-   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0c
+   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0b
    *
    * @param {number} degrees [-10000000..10000000] Degrees to turn
    * @param {number} speed [0..100]
@@ -63,6 +63,46 @@ class Motor extends Peripheral {
         Motor.SUB_CMD_START_POWER_FOR_DEGREES,
         ...int32ToArray(degrees),
         speed,
+        maxPower,
+        endState,
+        useProfile
+      ]
+    );
+  }
+
+  /**
+   *
+   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0c
+   *
+   * @param {number} degrees [-10000000..10000000] Degrees to turn
+   * @param {number} speedL [0..100] Speed of primary motor
+   * @param {number} speedR [0..100] Speed of secondary motor
+   * @param {number} maxPower [0..100]
+   * @param {number} endState One of `Motor.END_STATE_*`
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`)
+   */
+  combinedStartSpeedForDegrees(
+    degrees,
+    speedL,
+    speedR,
+    maxPower,
+    endState = Motor.END_STATE_FLOAT,
+    useProfile = Motor.PROFILE_DO_NOT_USE
+  ) {
+    if (degrees < 0) {
+      degrees = -degrees;
+      speedL = -speedL;
+      speedR = -speedR;
+    }
+    return PortOutput.build(
+      this.portId,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
+      [
+        Motor.SUB_CMD_START_POWER_FOR_DEGREES_COMBINED,
+        ...int32ToArray(degrees),
+        speedL,
+        this.startSpeedForDegrees,
         maxPower,
         endState,
         useProfile
@@ -104,6 +144,7 @@ class Motor extends Peripheral {
 
 Motor.SUB_CMD_START_POWER = 0x01;
 Motor.SUB_CMD_START_POWER_FOR_DEGREES = 0x0b;
+Motor.SUB_CMD_START_POWER_FOR_DEGREES_COMBINED = 0x0c;
 
 Motor.END_STATE_FLOAT = 0;
 Motor.END_STATE_HOLD = 126;

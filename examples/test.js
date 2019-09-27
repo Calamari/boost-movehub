@@ -12,14 +12,14 @@ boost.on("hubConnected", hub => {
 
   // hub.led(COLOR_RED);
 
-  hub.turnMotorD(20);
-  hub.ports.get(3).once("stop", () => {
+  hub.turnMotorAB(180, 20, 20);
+  hub.ports.get(16).once("stop", () => {
     console.log("It stopped turn back!");
-    hub.turnMotorD(-20);
   });
 
   // Is that what we want?
-  // hub.at(HubPorts.PORT_D).turnMotor(250, Motor.FAST)
+  // r2 = new R2D2(hub)
+  // r2.get(R2D2.HEAD).turn(250, Motor.FAST)
 
   // hub.startMotorD(-20);
   // setTimeout(() => {

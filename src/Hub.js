@@ -118,14 +118,29 @@ module.exports = class Hub extends EventEmitter {
     this.sendMessage(this.ports.get(MovehubPorts.PORT_D).stop());
   }
 
-  turnMotorD(degrees) {
+  turnMotorAB(degrees, speedL = 100, speedR = 100, maxPower = 100) {
+    this.sendMessage(
+      this.ports
+        .get(MovehubPorts.PORT_AB)
+        .combinedStartSpeedForDegrees(
+          degrees,
+          speedL,
+          speedR,
+          maxPower,
+          Motor.END_STATE_BREAK,
+          Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+        )
+    );
+  }
+
+  turnMotorD(degrees, speed = 100, maxPower = 100) {
     this.sendMessage(
       this.ports
         .get(MovehubPorts.PORT_D)
         .startSpeedForDegrees(
           degrees,
-          50,
-          100,
+          speed,
+          maxPower,
           Motor.END_STATE_BREAK,
           Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
         )
