@@ -5,29 +5,46 @@ const DeviceMessage = require("./DeviceMessage");
  *
  * TODO: Test receiving them
  */
-class HubAlerts extends DeviceMessage {}
+class HubAlert extends DeviceMessage {
+  get alertType() {
+    return this.data[3];
+  }
+
+  get alertTypeToString() {
+    switch (this.alertType) {
+      case HubAlert.LOW_VOLTAGE:
+        return "logVoltage";
+      case HubAlert.HIGH_CURRANT:
+        return "highCurrant";
+      case HubAlert.LOG_SIGNAL_STRGENTH:
+        return "lowSignal";
+      case HubAlert.OVER_POWER_CONDITION:
+        return "overPower";
+    }
+  }
+}
 
 /**
- * Instantiates a proper HubAlerts message to send to Hub
+ * Instantiates a proper HubAlert message to send to Hub
  *
  * @param {number} alertType
  */
-HubAlerts.build = function build(alertType, alertOp) {
-  return new HubAlerts(
-    Buffer.from([0x05, 0x00, HubAlerts.TYPE, alertType, alertOp])
+HubAlert.build = function build(alertType, alertOp) {
+  return new HubAlert(
+    Buffer.from([0x05, 0x00, HubAlert.TYPE, alertType, alertOp])
   );
 };
 
-HubAlerts.TYPE = 0x03;
+HubAlert.TYPE = 0x03;
 
-HubAlerts.TYPE_VOLTAGE = 0x01;
-HubAlerts.HIGH_CURRANT = 0x02;
-HubAlerts.LOG_SIGNAL_STRGENTH = 0x03;
-HubAlerts.OVER_POWER_CONDITION = 0x04;
+HubAlert.LOW_VOLTAGE = 0x01;
+HubAlert.HIGH_CURRANT = 0x02;
+HubAlert.LOG_SIGNAL_STRGENTH = 0x03;
+HubAlert.OVER_POWER_CONDITION = 0x04;
 
-HubAlerts.OP_ENABLE_UPDATES = 0x01;
-HubAlerts.OP_DISABLE_UPDATES = 0x02;
-HubAlerts.OP_REQUEST_UPDATES = 0x03;
-HubAlerts.OP_UPDATE = 0x04;
+HubAlert.OP_ENABLE_UPDATES = 0x01;
+HubAlert.OP_DISABLE_UPDATES = 0x02;
+HubAlert.OP_REQUEST_UPDATES = 0x03;
+HubAlert.OP_UPDATE = 0x04;
 
-module.exports = HubAlerts;
+module.exports = HubAlert;

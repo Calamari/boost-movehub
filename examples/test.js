@@ -7,6 +7,7 @@ boost.on("hubConnected", hub => {
   console.log("hub connected");
 
   // hub.on("tilt", tilt => console.log(tilt));
+  hub.activateAlerts();
 
   hub.subscribeToAllPorts();
 

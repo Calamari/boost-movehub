@@ -7,8 +7,7 @@ const HubAttachedMessage = require("./messages/HubAttachedMessage");
 const PortValueSingleMessage = require("./messages/PortValueSingleMessage");
 const UnknownMessage = require("./messages/UnknownMessage");
 const HubAction = require("./messages/HubAction");
-const PortInputFormat = require("./messages/PortInputFormat");
-const PortInputFormatSetup = require("./messages/PortInputFormatSetup");
+const HubAlert = require("./messages/HubAlert");
 
 const Motor = require("./peripherals/Motor");
 
@@ -157,6 +156,42 @@ module.exports = class Hub extends EventEmitter {
     });
   }
 
+  /**
+   * This subscribes to all or specific Hub Alerts.
+   * @param {number[]} [filter] List of HubAlert to subscribe to. Default are all.
+   */
+  activateAlerts(filter = null) {
+    if (filter === null) {
+      filter = [
+        (HubAlert.LOW_VOLTAGE = 0x01),
+        (HubAlert.HIGH_CURRANT = 0x02),
+        (HubAlert.LOG_SIGNAL_STRGENTH = 0x03),
+        (HubAlert.OVER_POWER_CONDITION = 0x04)
+      ];
+    }
+    filter.forEach(alertType => {
+      this.sendMessage(HubAlert.build(alertType, HubAlert.OP_ENABLE_UPDATES));
+    });
+  }
+
+  /**
+   * This unsubscribes from all or specifc Hub Alerts.
+   * @param {number[]} [filter] List of HubAlert to subscribe to. Default are all.
+   */
+  activateAlerts(filter = null) {
+    if (filter === null) {
+      filter = [
+        (HubAlert.LOW_VOLTAGE = 0x01),
+        (HubAlert.HIGH_CURRANT = 0x02),
+        (HubAlert.LOG_SIGNAL_STRGENTH = 0x03),
+        (HubAlert.OVER_POWER_CONDITION = 0x04)
+      ];
+    }
+    filter.forEach(alertType => {
+      this.sendMessage(HubAlert.build(alertType, HubAlert.OP_DISABLE_UPDATES));
+    });
+  }
+
   _handleDisconnection() {
     this.peripheral.on("disconnect", () => {
       this._log("debug", `Peripheral #${this.uuid} disconnected.`);
@@ -255,7 +290,7 @@ module.exports = class Hub extends EventEmitter {
         this._allNeededDevicesRegistered
       ) {
         /**
-         * Fires when a connection to the Move Hub is established
+         * Fires when a connection to the Move Hub is established.
          * @event Hub#connect
          */
         this.emit("connect");
@@ -282,6 +317,13 @@ module.exports = class Hub extends EventEmitter {
         );
       }
       // this.parseSensor(data);
+    } else if (msg instanceof HubAlert) {
+      this._log("info", "Got Alert:", msg.alertTypeToString());
+      /**
+       * Fires on received Hub Alert.
+       * @event Hub#hubAlert
+       */
+      this.emit("hubAlert", msg.alertTypeToString());
     } else if (msg instanceof PortOutputCommandFeedbackMessage) {
       this._log("info", "Got feedback:", msg.toString());
       const data = msg.valuesForPorts;
