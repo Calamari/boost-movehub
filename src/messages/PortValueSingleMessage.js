@@ -27,9 +27,9 @@ class PortValueSingleMessage extends DeviceMessage {
       case 5:
         return this.data[4];
       case 6:
-        return this.data.readInt16BE(4);
+        return this.data.readInt16LE(4);
       case 8:
-        return this.data.readInt32BE(4);
+        return this.data.readInt32LE(4);
     }
   }
 

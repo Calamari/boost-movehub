@@ -62,7 +62,9 @@ module.exports = class Hub extends EventEmitter {
 
   subscribeToAllPorts() {
     this._log("debug", `Subscribing to all ports.`);
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_TILT).subscribe());
+    // this.sendMessage(this.ports.get(MovehubPorts.PORT_TILT).subscribe());
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_VOLTAGE).subscribe());
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_CURRENT).subscribe());
     // this.ports
     //   .get(MovehubPorts.PORT_TILT)
     //   .on("data", data => this.emit("tilt", data));

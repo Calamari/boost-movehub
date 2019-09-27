@@ -8,14 +8,14 @@ boost.on("hubConnected", hub => {
 
   // hub.on("tilt", tilt => console.log(tilt));
 
-  // hub.subscribeToAllPorts();
+  hub.subscribeToAllPorts();
 
   // hub.led(COLOR_RED);
 
-  hub.turnMotorAB(180, 20, 20);
-  hub.ports.get(16).once("stop", () => {
-    console.log("It stopped turn back!");
-  });
+  // hub.turnMotorAB(180, 20, 20);
+  // hub.ports.get(16).once("stop", () => {
+  //   console.log("It stopped turn back!");
+  // });
 
   // Is that what we want?
   // r2 = new R2D2(hub)

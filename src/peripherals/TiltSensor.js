@@ -19,12 +19,13 @@ class TiltSensor extends Peripheral {
 
   /**
    * Receives nd processes message with value from sensor.
+   *
    * @param {PortValueSingleMessage} msg
    */
   receiveValue(msg) {
     switch (this.mode) {
       case TiltSensor.MODE_2AXIS_ANGLE: {
-        const roll = msg.paload[0];
+        const roll = msg.payload[0];
         const pitch = msg.payload[1];
         this.lastValue = {
           roll,

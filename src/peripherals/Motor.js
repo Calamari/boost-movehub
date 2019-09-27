@@ -7,7 +7,6 @@ class Motor extends Peripheral {
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "Motor";
-    this.mode = Motor.MODE_2AXIS_ANGLE;
     this.status = Motor.STOPPED;
   }
 

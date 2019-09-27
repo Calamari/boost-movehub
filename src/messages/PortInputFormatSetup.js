@@ -10,14 +10,15 @@ class PortInputFormatSetup extends PortInputFormat {}
  * Instantiates a proper PortInputFormatSetup to send to Hub
  *
  * @param {number} portId
- * @param {number} options.mode
- * @param {number} options.deltaInterval Interval of messages (in what exactly? ms?)
- * @param {number} options.notificationEnabled Defines if messages should be send back on a regular base.
+ * @param {number} [options.mode]
+ * @param {number} [options.deltaInterval] Interval of messages (in what exactly? ms?)
+ * @param {number} [options.notificationEnabled] Defines if messages should be send back on a regular base.
  */
 PortInputFormatSetup.build = function build(portId, options = {}) {
   const mode = options.mode || 0x00;
-  const deltaInterval = options.deltaInterval || 0x01; // TODO: Fiure out: delta of what exactly?
-  const notificationEnabled = options.notificationEnabled || 0x01;
+  const deltaInterval = options.deltaInterval || 0x01; // TODO: Figure out: delta of what exactly?
+  const notificationEnabled =
+    options.notificationEnabled || PortInputFormatSetup.ENABLE_NOTIFICATONS;
   return new PortInputFormatSetup(
     Buffer.from([
       0x0a,
@@ -35,5 +36,8 @@ PortInputFormatSetup.build = function build(portId, options = {}) {
 };
 
 PortInputFormatSetup.TYPE = 0x41;
+
+PortInputFormatSetup.ENABLE_NOTIFICATONS = 0x01;
+PortInputFormatSetup.DISABLE_NOTIFICATONS = 0x00;
 
 module.exports = PortInputFormatSetup;
