@@ -8,7 +8,7 @@ function encodeFlags(flags) {
 
 function int32ToArray(nr) {
   let buf = new Buffer([0, 0, 0, 0]);
-  buf.writeInt32BE(nr);
+  buf.writeInt32LE(nr);
   return new Uint8Array(buf);
 }
 
