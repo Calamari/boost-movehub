@@ -24,8 +24,8 @@ class Motor extends Peripheral {
     return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
-
-      [Motor.SUB_CMD_START_POWER, dutyCycle]
+      Motor.SUB_CMD_START_POWER,
+      [dutyCycle]
     );
   }
 
@@ -61,14 +61,8 @@ class Motor extends Peripheral {
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
         PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
-      [
         Motor.SUB_CMD_START_POWER_FOR_DEGREES,
-        ...int32ToArray(degrees),
-        speed,
-        maxPower,
-        endState,
-        useProfile
-      ]
+      [...int32ToArray(degrees), speed, maxPower, endState, useProfile]
     );
   }
 
@@ -100,8 +94,8 @@ class Motor extends Peripheral {
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
         PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
+      Motor.SUB_CMD_START_POWER_FOR_DEGREES_COMBINED,
       [
-        Motor.SUB_CMD_START_POWER_FOR_DEGREES_COMBINED,
         ...int32ToArray(degrees),
         speedL,
         this.startSpeedForDegrees,
@@ -126,6 +120,7 @@ class Motor extends Peripheral {
    * @param {number} value One of `PortOutputCommandFeedbackMessage.ACTION_*`
    */
   receiveFeedback(value) {
+    this._log("debug", "Motor feedback", value);
     if (value === PortOutputCommandFeedbackMessage.ACTION_START) {
       this.status = Motor.RUNNING;
       /**

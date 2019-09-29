@@ -149,7 +149,7 @@ module.exports = class Hub extends EventEmitter {
   }
 
   sendMessage(msg, callback = null) {
-    this._log("debug", "Sending message", msg.data);
+    this._log("debug", "Sending message", msg.toString(), msg.data);
     this.characteristic.write(msg.data, true, (...args) => {
       this._log("silly", "Callback from write", args);
       callback && callback(...args);

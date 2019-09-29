@@ -23,7 +23,8 @@ class RgbLed extends Peripheral {
     return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
-      [INDEX_MODE, color]
+      INDEX_MODE,
+      [color]
     );
   }
 
@@ -42,7 +43,8 @@ class RgbLed extends Peripheral {
     return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
-      [0, 0x51, RGB_MODE, red, green, blue]
+      RGB_MODE,
+      [red, green, blue]
     );
   }
 
