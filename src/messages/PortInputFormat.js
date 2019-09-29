@@ -6,6 +6,11 @@ const { toHexString } = require("../helpers");
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-input-format-single
  */
 class PortInputFormat extends DeviceMessage {
+  constructor(...args) {
+    super(...args);
+    this.displayName = "PortInputFormat";
+  }
+
   get portId() {
     return this.data[3];
   }
@@ -29,7 +34,7 @@ class PortInputFormat extends DeviceMessage {
     const delta = toHexString(this.deltaInterval);
     const updates = this.notificationEnabled ? "true" : "false";
 
-    return `PortInfoFormat(port=${portId}, mode=${mode}, delta=${delta}, updates=${updates})`;
+    return `${this.displayName}(port=${portId}, mode=${mode}, delta=${delta}, updates=${updates})`;
   }
 }
 

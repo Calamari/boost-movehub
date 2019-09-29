@@ -4,7 +4,12 @@ const PortInputFormat = require("./PortInputFormat");
  * Downstream message to setup receiving single value sensor updates
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-input-format-setup-single
  */
-class PortInputFormatSetup extends PortInputFormat {}
+class PortInputFormatSetup extends PortInputFormat {
+  constructor(...args) {
+    super(...args);
+    this.displayName = "PortInputFormatSetup";
+  }
+}
 
 /**
  * Instantiates a proper PortInputFormatSetup to send to Hub
