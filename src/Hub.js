@@ -286,6 +286,7 @@ module.exports = class Hub extends EventEmitter {
       );
       this.ports.registerFromMessage(msg);
       if (
+        !this.connected &&
         this.ports.builtInDevicesRegistered &&
         this._allNeededDevicesRegistered
       ) {
