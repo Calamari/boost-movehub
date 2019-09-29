@@ -1,4 +1,5 @@
 const { toHexString } = require("../helpers");
+
 /**
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#message-types
  */

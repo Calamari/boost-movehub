@@ -38,7 +38,7 @@ class RgbLed extends Peripheral {
    * @param {number} green Green part of RGB value 0…255
    * @param {number} blue Blue part of RGB value 0…255
    */
-  setRGBColor(red, green, blue) {
+  setRgbColor(red, green, blue) {
     return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,

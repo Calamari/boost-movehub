@@ -100,7 +100,7 @@ module.exports = class Hub extends EventEmitter {
    * @param  {...any} rgb
    */
   ledRGB(...rgb) {
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setRGBColor(...rgb));
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setRgbColor(...rgb));
   }
 
   /**
