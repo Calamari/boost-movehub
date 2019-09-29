@@ -103,6 +103,7 @@ module.exports = class Boost extends EventEmitter {
   }
 
   _log(type, ...message) {
-    this.logger[type] && this.logger[type]("[Boost]", ...message);
+    this.logger[type] &&
+      this.logger[type]("[Boost]", new Date().toISOString(), ...message);
   }
 };

@@ -346,6 +346,7 @@ module.exports = class Hub extends EventEmitter {
   }
 
   _log(type, ...message) {
-    this.logger[type] && this.logger[type]("[Hub]", ...message);
+    this.logger[type] &&
+      this.logger[type]("[Hub]", new Date().toISOString(), ...message);
   }
 };
