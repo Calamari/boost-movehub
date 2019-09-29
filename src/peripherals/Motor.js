@@ -18,6 +18,9 @@ class Motor extends Peripheral {
    * @param {number} dutyCycle [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
    */
   startPower(dutyCycle) {
+    if (this.isVirtualDevice) {
+      throw new Error("Virtual Device cannot start Power on only one motor.");
+    }
     return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
