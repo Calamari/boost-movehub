@@ -13,10 +13,10 @@ class HubAlert extends DeviceMessage {
   get alertTypeToString() {
     switch (this.alertType) {
       case HubAlert.LOW_VOLTAGE:
-        return "logVoltage";
+        return "lowVoltage";
       case HubAlert.HIGH_CURRANT:
         return "highCurrant";
-      case HubAlert.LOG_SIGNAL_STRGENTH:
+      case HubAlert.LOW_SIGNAL_STRENGTH:
         return "lowSignal";
       case HubAlert.OVER_POWER_CONDITION:
         return "overPower";
@@ -39,7 +39,7 @@ HubAlert.TYPE = 0x03;
 
 HubAlert.LOW_VOLTAGE = 0x01;
 HubAlert.HIGH_CURRANT = 0x02;
-HubAlert.LOG_SIGNAL_STRGENTH = 0x03;
+HubAlert.LOW_SIGNAL_STRENGTH = 0x03;
 HubAlert.OVER_POWER_CONDITION = 0x04;
 
 HubAlert.OP_ENABLE_UPDATES = 0x01;
