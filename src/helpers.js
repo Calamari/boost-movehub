@@ -1,6 +1,5 @@
 function encodeFlags(flags) {
   if (typeof flags !== "number") {
-    console.log(typeof flags);
     flags = flags.reduce((memo, flag) => memo | flag, 0);
   }
   return flags;
