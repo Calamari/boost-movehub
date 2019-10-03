@@ -6,6 +6,7 @@ class TiltSensor extends Peripheral {
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "TiltSensor";
+    this.emitAs = "tilt";
     this.lastValue = null;
     this.mode = TiltSensor.MODE_2AXIS_ANGLE;
   }

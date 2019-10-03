@@ -5,6 +5,7 @@ class Current extends Peripheral {
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "Current";
+    this.emitAs = "current";
     this.lastValue = null;
     this.mode = Current.MODE_ONE;
   }

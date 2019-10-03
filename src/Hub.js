@@ -319,7 +319,9 @@ module.exports = class Hub extends EventEmitter {
       if (peripheral) {
         if (peripheral.receiveValue) {
           peripheral.receiveValue(msg);
-          this.emit("tilt", peripheral.lastValue);
+          if (peripheral.emitAs) {
+            this.emit(peripheral.emitAs, peripheral.lastValue);
+          }
         } else {
           this._log(
             "warn",

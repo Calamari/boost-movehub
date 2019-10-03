@@ -5,6 +5,7 @@ class Voltage extends Peripheral {
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "Voltage";
+    this.emitAs = "voltage";
     this.lastValue = null;
     this.mode = Voltage.MODE_ONE;
   }
