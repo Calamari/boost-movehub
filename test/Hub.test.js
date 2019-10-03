@@ -6,6 +6,8 @@ const TiltSensor = require("../src/peripherals/TiltSensor");
 const Motor = require("../src/peripherals/Motor");
 const Hub = require("../src/Hub");
 const HubAttachedMessage = require("../src/messages/HubAttachedMessage");
+const stubCharacteristic = require("./support/stubCharacteristic");
+const stubPeripheral = require("./support/stubPeripheral");
 const expect = chai.expect;
 chai.use(sinonChai);
 
@@ -17,26 +19,9 @@ describe("Hub", () => {
   let characteristic;
   beforeEach(() => {
     characteristic = {
-      uuid: LEGO_CHARACTERISTIC,
-      dataHandler: null,
-      on: (type, cb) => {
-        console.log("OKOKOK");
-        if (type === "data") {
-          characteristic.dataHandler = cb;
-        }
-      },
-      subscribe: sinon.spy()
+      ...stubCharacteristic
     };
-    peripheral = {
-      address: "00:00:00:00:00:00:01",
-      uuid: "001653aeb339",
-      discoverAllServicesAndCharacteristics: sinon.spy(cb =>
-        cb(null, [], [characteristic])
-      ),
-      connect: sinon.spy(),
-      on: sinon.spy(),
-      updateRssi: sinon.spy()
-    };
+    peripheral = stubPeripheral(characteristic);
   });
 
   it("directly connects with the peripheral", () => {
