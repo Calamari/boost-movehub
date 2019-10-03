@@ -4,6 +4,7 @@ const Peripheral = require("./peripherals/Peripheral");
 const RgbLed = require("./peripherals/RgbLed");
 const TiltSensor = require("./peripherals/TiltSensor");
 const UnknownPeripheral = require("./peripherals/UnknownPeripheral");
+const VisionSensor = require("./peripherals/VisionSensor");
 const Voltage = require("./peripherals/Voltage");
 
 module.exports = {
@@ -12,6 +13,7 @@ module.exports = {
     [Peripheral.DEV_RGB_LIGHT]: RgbLed,
     [Peripheral.DEV_MOTOR_EXTERNAL_TACHO]: Motor,
     [Peripheral.DEV_MOTOR_INTERNAL_TACHO]: Motor,
+    [Peripheral.DEV_VISION_SENSOR]: VisionSensor,
     [Peripheral.DEV_CURRENT]: Current,
     [Peripheral.DEV_VOLTAGE]: Voltage
   },

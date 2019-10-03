@@ -8,13 +8,13 @@ class TiltSensor extends Peripheral {
     this.displayName = "TiltSensor";
     this.emitAs = "tilt";
     this.lastValue = null;
-    this.mode = TiltSensor.MODE_2AXIS_ANGLE;
   }
 
   /**
    * Creates a message that starts subscribing to updates.
    */
-  subscribe() {
+  subscribe(mode = TiltSensor.MODE_2AXIS_ANGLE) {
+    this.mode = mode;
     return PortInputFormatSetup.build(this.portId, { mode: this.mode });
   }
 
