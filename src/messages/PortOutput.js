@@ -89,6 +89,7 @@ PortOutput.SUB_CMD_WRITE_DIRECT_MODE_DATA = 0x51;
 
 // https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#startup-and-completion-information
 PortOutput.SC_FLAGS = {
+  NONE: 0b00000000,
   EXECUTE_IMMEDIATE: 0b00000001,
   COMMAND_FEEDBACK: 0b00010000
 };

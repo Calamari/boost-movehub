@@ -61,17 +61,11 @@ module.exports = class Hub extends EventEmitter {
 
   subscribeToAllPorts() {
     this._log("debug", `Subscribing to all ports.`);
-    // this.sendMessage(this.ports.get(MovehubPorts.PORT_TILT).subscribe());
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_TILT).subscribe());
     this.sendMessage(this.ports.get(MovehubPorts.PORT_VOLTAGE).subscribe());
     this.sendMessage(this.ports.get(MovehubPorts.PORT_CURRENT).subscribe());
-    // this.ports
-    //   .get(MovehubPorts.PORT_TILT)
-    //   .on("data", data => this.emit("tilt", data));
-    // this.sendMessage(PortInputFormatSetup.build(MovehubPorts.PORT_CURRENT));
-    // this.sendMessage(PortInputFormatSetup.build(MovehubPorts.PORT_VOLTAGE));
-    // this.ports.get(MovehubPorts.PORT_TILT).subscribe(data => {
-    //   console.log("TILT:", data);
-    // });
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_AB).subscribe());
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).subscribe());
   }
 
   disconnect() {
@@ -117,6 +111,28 @@ module.exports = class Hub extends EventEmitter {
    */
   stopMotorD() {
     this.sendMessage(this.ports.get(MovehubPorts.PORT_D).stop());
+  }
+
+  /**
+   * Sends message to start both Motors on Port A & B.
+   *
+   * @param {number} dutyCycleL
+   * @param {number} dutyCycleR
+   */
+  startMotorAB(dutyCycleL, dutyCycleR) {
+    console.log("dutyCycleL, dutyCycleR", dutyCycleL, dutyCycleR);
+    this.sendMessage(
+      this.ports
+        .get(MovehubPorts.PORT_AB)
+        .combinedStartSpeed(dutyCycleL, dutyCycleR)
+    );
+  }
+
+  /**
+   * Sends message to stop both Motor on Port A & B.
+   */
+  stopMotorAB() {
+    this.sendMessage(this.ports.get(MovehubPorts.PORT_AB).combinedStop());
   }
 
   turnMotorAB(degrees, speedL = 100, speedR = 100, maxPower = 100) {

@@ -22,7 +22,7 @@ class RgbLed extends Peripheral {
   setColor(color) {
     return PortOutput.buildWriteDirectModeData(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       INDEX_MODE,
       [color]
     );
@@ -42,7 +42,7 @@ class RgbLed extends Peripheral {
   setRgbColor(red, green, blue) {
     return PortOutput.buildWriteDirectModeData(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.NONE,
       RGB_MODE,
       [red, green, blue]
     );
@@ -54,6 +54,10 @@ class RgbLed extends Peripheral {
    */
   receiveValue(_msg) {
     this._log("info", `.receiveValue not implemetned`);
+  }
+
+  receiveFeedback(msg) {
+    this._log("debug", `rgbLed received feedback:`, msg);
   }
 }
 

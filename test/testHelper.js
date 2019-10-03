@@ -4,6 +4,8 @@ const PortOutput = require("../src/messages/PortOutput");
 var expect = chai.expect;
 
 function expectWriteDirectModeData(msg) {
+  expect(msg.isWriteDirectModeData).to.be.true;
+
   expect(msg.data[5]).to.eql(
     PortOutput.SUB_CMD_WRITE_DIRECT_MODE_DATA,
     "type is sub command WriteDirectModeData"

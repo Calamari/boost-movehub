@@ -7,7 +7,7 @@ function printableAction(action) {
     case PortOutputCommandFeedbackMessage.ACTION_CONFLICT:
       return "conflict";
     case PortOutputCommandFeedbackMessage.ACTION_STOP:
-      return "stopeed";
+      return "stopped";
     default:
       return "unknown";
   }

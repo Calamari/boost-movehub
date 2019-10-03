@@ -17,7 +17,7 @@ class Peripheral extends EventEmitter {
     this.ioType = ioType;
     this.portId = portId;
     this.logger = options.logger || {};
-    this.isVirtualDevice = !!options.ioMembers;
+    this.isVirtualDevice = options.ioMembers && options.ioMembers.length > 1;
   }
 
   _log(type, ...message) {
