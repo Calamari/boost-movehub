@@ -5,10 +5,24 @@ function encodeFlags(flags) {
   return flags;
 }
 
+function int16ToArray(nr) {
+  let buf = new Buffer([0, 0]);
+  buf.writeInt16LE(nr);
+  return new Uint8Array(buf);
+}
+
 function int32ToArray(nr) {
   let buf = new Buffer([0, 0, 0, 0]);
   buf.writeInt32LE(nr);
   return new Uint8Array(buf);
+}
+
+function promiseTimeout(time) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, time);
+  });
 }
 
 function toHexString(nr) {
@@ -18,6 +32,8 @@ function toHexString(nr) {
 
 module.exports = {
   encodeFlags,
+  int16ToArray,
   int32ToArray,
+  promiseTimeout,
   toHexString
 };

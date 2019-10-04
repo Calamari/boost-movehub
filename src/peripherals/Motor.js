@@ -2,7 +2,7 @@ const Peripheral = require("./Peripheral");
 const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
 const PortOutput = require("../messages/PortOutput");
 const PortOutputCommandFeedbackMessage = require("../messages/PortOutputCommandFeedbackMessage");
-const { int32ToArray } = require("../helpers");
+const { int16ToArray, int32ToArray } = require("../helpers");
 
 class Motor extends Peripheral {
   constructor(ioType, portId, options = undefined) {
@@ -56,6 +56,38 @@ class Motor extends Peripheral {
   }
 
   /**
+   * Starts the motor for given amount of time.
+   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfortime-time-speed-maxpower-endstate-useprofile-0x09
+   *
+   * @param {number} time [0..2^15] milliseconds
+   * @param {number} dutyCycle [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
+   * @param {number} maxSpeed [0..100]%
+   * @param {number} endState One of `Motor.END_STATE_*`
+   */
+  startSpeedForTime(
+    time,
+    dutyCycle,
+    maxSpeed = 100,
+    endState = Motor.END_STATE_FLOAT
+  ) {
+    if (this.isVirtualDevice) {
+      throw new Error("Virtual Device cannot start Power on only one motor.");
+    }
+    return PortOutput.build(
+      this.portId,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      Motor.SUB_CMD_START_SPEED_FOR_TIME,
+      [
+        ...int16ToArray(time),
+        dutyCycle,
+        maxSpeed,
+        endState,
+        Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+      ]
+    );
+  }
+
+  /**
    * Creates stops message for motor.
    */
   stop() {
@@ -98,12 +130,52 @@ class Motor extends Peripheral {
    * @param {number} dutyCycleR [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop of secondary motor
    */
   combinedStartPower(dutyCycleL, dutyCycleR) {
+    if (!this.isVirtualDevice) {
+      throw new Error("Non-virtual Device cannot start Power on two motors.");
+    }
     return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
         PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_POWER_COMBINED,
       [dutyCycleL, dutyCycleR]
+    );
+  }
+
+  /**
+   * Starts two motors for given amount of time.
+   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfortime-time-speed-maxpower-endstate-useprofile-0x0a
+   *
+   * TODO: Does not work yet
+   *
+   * @param {number} time [0..2^15] milliseconds
+   * @param {number} dutyCycleL [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
+   * @param {number} dutyCycleR [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
+   * @param {number} maxSpeed [0..100]%
+   * @param {number} endState One of `Motor.END_STATE_*`
+   */
+  combinedStartSpeedForTime(
+    time,
+    dutyCycleL,
+    dutyCycleR,
+    maxSpeed = 100,
+    endState = Motor.END_STATE_FLOAT
+  ) {
+    if (!this.isVirtualDevice) {
+      throw new Error("Non-virtual Device cannot start Power on two motors.");
+    }
+    return PortOutput.build(
+      this.portId,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      Motor.SUB_CMD_START_SPEED_FOR_TIME_COMBINED,
+      [
+        ...int16ToArray(time),
+        dutyCycleL,
+        dutyCycleR,
+        maxSpeed,
+        endState,
+        Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+      ]
     );
   }
 
@@ -228,6 +300,8 @@ Motor.SUB_CMD_START_POWER = 0x01;
 Motor.SUB_CMD_START_POWER_COMBINED = 0x02;
 Motor.SUB_CMD_START_SPEED = 0x07;
 Motor.SUB_CMD_START_SPEED_COMBINED = 0x08;
+Motor.SUB_CMD_START_SPEED_FOR_TIME = 0x09;
+Motor.SUB_CMD_START_SPEED_FOR_TIME_COMBINED = 0x0a;
 Motor.SUB_CMD_START_POWER_FOR_DEGREES = 0x0b;
 Motor.SUB_CMD_START_POWER_FOR_DEGREES_COMBINED = 0x0c;
 

@@ -11,7 +11,7 @@ boost.on("hubConnected", hub => {
   // hub.on("tilt", tilt => console.log(tilt));
   // hub.activateAlerts();
 
-  hub.subscribeToAllPorts();
+  // hub.subscribeToAllPorts();
 
   // hub.turnMotorAB(180, 20, 20);
   // hub.ports.get(16).once("stop", () => {
@@ -24,7 +24,10 @@ boost.on("hubConnected", hub => {
 
   // Is that what we want?
   r2 = new R2D2(hub);
-  r2.head.turn(90, 10);
+  r2.wheels.driveTime(1200, 10).then(() => {
+    r2.wheels.driveTime(1200, -10);
+  });
+  // r2.head.turnTime(3000, 10);
   // hub.startMotorAB(15, 15);
   // hub.led(COLOR_RED);
   // r2.rgbLed.setColor(COLOR_YELLOW);

@@ -1,4 +1,5 @@
 const MovehubPorts = require("../MovehubPorts");
+const { promiseTimeout } = require("../helpers");
 
 /**
  * Interface to work with R2D2 robot
@@ -21,12 +22,19 @@ module.exports = class R2D2 {
   get wheels() {
     const motor = this.hub.ports.get(MovehubPorts.PORT_AB);
     return {
-      forward: speed => {
+      drive: speed => {
         this.hub.sendMessage(motor.combinedStartSpeed(speed, speed));
         return Promise.resolve();
       },
+      driveTime: (time, speed) => {
+        this.hub.sendMessage(
+          motor.combinedStartSpeedForTime(time, speed, speed)
+        );
+        return promiseTimeout(time);
+      },
       stop: () => {
         this.hub.sendMessage(motor.combinedStop());
+        return Promise.resolve();
       }
     };
   }
@@ -38,6 +46,10 @@ module.exports = class R2D2 {
         //Todo turn
         this.hub.sendMessage(head.startSpeed(speed));
         return Promise.resolve();
+      },
+      turnTime: (time, speed) => {
+        this.hub.sendMessage(head.startSpeedForTime(time, speed));
+        return promiseTimeout(time);
       }
     };
   }
