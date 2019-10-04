@@ -88,6 +88,38 @@ class Motor extends Peripheral {
   }
 
   /**
+   * Turns the motor for given number of degrees
+   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b
+   *
+   * @param {number} degrees [0..2^31] milliseconds
+   * @param {number} dutyCycle [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
+   * @param {number} maxSpeed [0..100]%
+   * @param {number} endState One of `Motor.END_STATE_*`
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`)
+   */
+  startSpeedForDegrees(
+    degrees,
+    dutyCycle,
+    maxSpeed = 100,
+    endState = Motor.END_STATE_BREAK,
+    useProfile = Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+  ) {
+    if (this.isVirtualDevice) {
+      throw new Error("Virtual Device cannot start Power on only one motor.");
+    }
+    if (degrees < 0) {
+      degrees = -degrees;
+      dutyCycle = -dutyCycle;
+    }
+    return PortOutput.build(
+      this.portId,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      Motor.SUB_CMD_START_SPEED_FOR_DEGREES,
+      [...int32ToArray(degrees), dutyCycle, maxSpeed, endState, useProfile]
+    );
+  }
+
+  /**
    * Creates stops message for motor.
    */
   stop() {
@@ -180,80 +212,52 @@ class Motor extends Peripheral {
   }
 
   /**
-   * Creates stops message for motor.
-   */
-  combinedStop() {
-    return this.combinedStartSpeed(0, 0);
-  }
-
-  /**
-   *
-   * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0b
-   *
-   * @param {number} degrees [-10000000..10000000] Degrees to turn
-   * @param {number} speed [0..100]
-   * @param {number} maxPower [0..100]
-   * @param {number} endState One of `Motor.END_STATE_*`
-   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`)
-   */
-  startSpeedForDegrees(
-    degrees,
-    speed,
-    maxPower,
-    endState = Motor.END_STATE_FLOAT,
-    useProfile = Motor.PROFILE_DO_NOT_USE
-  ) {
-    if (degrees < 0) {
-      degrees = -degrees;
-      speed = -speed;
-    }
-    return PortOutput.build(
-      this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
-        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
-      Motor.SUB_CMD_START_POWER_FOR_DEGREES,
-      [...int32ToArray(degrees), speed, maxPower, endState, useProfile]
-    );
-  }
-
-  /**
-   *
+   * Turns two motors in sync for given number of degrees
    * Sends message as defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speedl-speedr-maxpower-endstate-useprofile-0x0c
    *
-   * @param {number} degrees [-10000000..10000000] Degrees to turn
-   * @param {number} speedL [0..100] Speed of primary motor
-   * @param {number} speedR [0..100] Speed of secondary motor
-   * @param {number} maxPower [0..100]
+   * @param {number} degrees [0..2^31] milliseconds
+   * @param {number} dutyCycleL [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
+   * @param {number} dutyCycleR [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
+   * @param {number} maxSpeed [0..100]%
    * @param {number} endState One of `Motor.END_STATE_*`
    * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`)
    */
   combinedStartSpeedForDegrees(
     degrees,
-    speedL,
-    speedR,
-    maxPower,
-    endState = Motor.END_STATE_FLOAT,
-    useProfile = Motor.PROFILE_DO_NOT_USE
+    dutyCycleL,
+    dutyCycleR,
+    maxSpeed = 100,
+    endState = Motor.END_STATE_BREAK,
+    useProfile = Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
   ) {
+    if (!this.isVirtualDevice) {
+      throw new Error("Non-virtual Device cannot start Power on two motors.");
+    }
     if (degrees < 0) {
       degrees = -degrees;
-      speedL = -speedL;
-      speedR = -speedR;
+      dutyCycleL = -dutyCycleL;
+      dutyCycleR = -dutyCycleR;
     }
     return PortOutput.build(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
-        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
-      Motor.SUB_CMD_START_POWER_FOR_DEGREES_COMBINED,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      Motor.SUB_CMD_START_SPEED_FOR_DEGREES_COMBINED,
       [
         ...int32ToArray(degrees),
-        speedL,
-        this.startSpeedForDegrees,
-        maxPower,
+        dutyCycleL,
+        dutyCycleR,
+        maxSpeed,
         endState,
         useProfile
       ]
     );
+  }
+
+  /**
+   * Creates stops message for motor.
+   */
+  combinedStop() {
+    return this.combinedStartSpeed(0, 0);
   }
 
   /**
@@ -302,8 +306,8 @@ Motor.SUB_CMD_START_SPEED = 0x07;
 Motor.SUB_CMD_START_SPEED_COMBINED = 0x08;
 Motor.SUB_CMD_START_SPEED_FOR_TIME = 0x09;
 Motor.SUB_CMD_START_SPEED_FOR_TIME_COMBINED = 0x0a;
-Motor.SUB_CMD_START_POWER_FOR_DEGREES = 0x0b;
-Motor.SUB_CMD_START_POWER_FOR_DEGREES_COMBINED = 0x0c;
+Motor.SUB_CMD_START_SPEED_FOR_DEGREES = 0x0b;
+Motor.SUB_CMD_START_SPEED_FOR_DEGREES_COMBINED = 0x0c;
 
 Motor.END_STATE_FLOAT = 0;
 Motor.END_STATE_HOLD = 126;

@@ -24,10 +24,11 @@ boost.on("hubConnected", hub => {
 
   // Is that what we want?
   r2 = new R2D2(hub);
-  r2.wheels.driveTime(1200, 10).then(() => {
-    r2.wheels.driveTime(1200, -10);
-  });
-  // r2.head.turnTime(3000, 10);
+  // r2.wheels.driveTime(1200, 10).then(() => {
+  // r2.wheels.driveTime(1200, -10);
+  // });
+  r2.wheels.driveDistance(10, 10);
+  // r2.head.turnDegrees(-360, 40);
   // hub.startMotorAB(15, 15);
   // hub.led(COLOR_RED);
   // r2.rgbLed.setColor(COLOR_YELLOW);

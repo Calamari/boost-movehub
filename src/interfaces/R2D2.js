@@ -1,6 +1,10 @@
 const MovehubPorts = require("../MovehubPorts");
 const { promiseTimeout } = require("../helpers");
 
+// The wheels have a radius of 1.75cm, so the perimeter is 10.996cm (let's say 11cm)
+const WHEEL_PERIMETER = 11;
+const DEGREES_PER_CM = 360 / WHEEL_PERIMETER;
+
 /**
  * Interface to work with R2D2 robot
  */
@@ -26,6 +30,14 @@ module.exports = class R2D2 {
         this.hub.sendMessage(motor.combinedStartSpeed(speed, speed));
         return Promise.resolve();
       },
+      driveDistance: (centimeters, speed) => {
+        const degrees = centimeters * DEGREES_PER_CM;
+        this.hub.sendMessage(
+          motor.combinedStartSpeedForDegrees(degrees, speed, speed)
+        );
+        // TODO real promise when finished
+        return Promise.resolve();
+      },
       driveTime: (time, speed) => {
         this.hub.sendMessage(
           motor.combinedStartSpeedForTime(time, speed, speed)
@@ -42,9 +54,16 @@ module.exports = class R2D2 {
   get head() {
     const head = this.hub.ports.get(MovehubPorts.PORT_D);
     return {
-      turn: (degree, speed) => {
-        //Todo turn
+      turn: speed => {
         this.hub.sendMessage(head.startSpeed(speed));
+        return Promise.resolve();
+      },
+      turnDegrees: (degrees, speed) => {
+        // We have to turn the motor more to get the head around 360 degrees
+        this.hub.sendMessage(
+          head.startSpeedForDegrees(Math.round(1.66 * degrees), speed)
+        );
+        // TODO real promise when finished
         return Promise.resolve();
       },
       turnTime: (time, speed) => {
