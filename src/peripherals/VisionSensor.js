@@ -24,7 +24,6 @@ class VisionSensor extends Peripheral {
    * @param {PortValueSingleMessage} msg
    */
   receiveValue(msg) {
-    console.log("Vision received value:", msg);
     switch (this.mode) {
       case VisionSensor.DISTANCE: {
         this.lastValue.distance = msg.value;
@@ -49,7 +48,6 @@ class VisionSensor extends Peripheral {
         const color = msg.payload[0];
         let distance = msg.payload[1];
         const partial = msg.payload[3];
-        console.log(msg.payload);
         if (partial) {
           distance += 1.0 / partial;
         }

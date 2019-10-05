@@ -7,6 +7,9 @@ var expect = chai.expect;
 
 describe("Motor", () => {
   let motor = new Motor(Peripheral.DEV_MOTOR_INTERNAL_TACHO, 0xaa);
+  let virtualMotor = new Motor(Peripheral.DEV_MOTOR_INTERNAL_TACHO, 0xaa, {
+    ioMembers: [{}, {}]
+  });
 
   describe(".startPower", () => {
     const subject = motor.startPower(10);
@@ -61,7 +64,7 @@ describe("Motor", () => {
   });
 
   describe(".combinedStartPower", () => {
-    const subject = motor.combinedStartPower(10, 10);
+    const subject = virtualMotor.combinedStartPower(10, 10);
 
     it("creates an instance of a PortOutput message", () => {
       expect(subject).to.be.instanceOf(PortOutput);

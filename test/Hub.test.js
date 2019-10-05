@@ -18,9 +18,7 @@ describe("Hub", () => {
   let hub;
   let characteristic;
   beforeEach(() => {
-    characteristic = {
-      ...stubCharacteristic
-    };
+    characteristic = stubCharacteristic();
     peripheral = stubPeripheral(characteristic);
   });
 
