@@ -37,9 +37,14 @@ class Motor extends Peripheral {
    * FIXME: 0 gives a piezo sound, so I guess that is not totally correct
    *
    * @param {number} dutyCycle [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
-   * @param {number} maxSpeed [0..100]%
+   * @param {number} [maxSpeed] [0..100]%
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`, defaults to `Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION`)
    */
-  startSpeed(dutyCycle, maxSpeed = 100) {
+  startSpeed(
+    dutyCycle,
+    maxSpeed = 100,
+    useProfile = Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+  ) {
     if (this.isVirtualDevice) {
       throw new Error("Virtual Device cannot start Power on only one motor.");
     }
@@ -47,11 +52,7 @@ class Motor extends Peripheral {
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
       Motor.SUB_CMD_START_SPEED,
-      [
-        dutyCycle,
-        maxSpeed,
-        Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
-      ]
+      [dutyCycle, maxSpeed, useProfile]
     );
   }
 
@@ -63,12 +64,14 @@ class Motor extends Peripheral {
    * @param {number} dutyCycle [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
    * @param {number} maxSpeed [0..100]%
    * @param {number} endState One of `Motor.END_STATE_*`
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`, defaults to `Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION`)
    */
   startSpeedForTime(
     time,
     dutyCycle,
     maxSpeed = 100,
-    endState = Motor.END_STATE_FLOAT
+    endState = Motor.END_STATE_FLOAT,
+    useProfile = Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
   ) {
     if (this.isVirtualDevice) {
       throw new Error("Virtual Device cannot start Power on only one motor.");
@@ -77,13 +80,7 @@ class Motor extends Peripheral {
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
       Motor.SUB_CMD_START_SPEED_FOR_TIME,
-      [
-        ...int16ToArray(time),
-        dutyCycle,
-        maxSpeed,
-        endState,
-        Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
-      ]
+      [...int16ToArray(time), dutyCycle, maxSpeed, endState, useProfile]
     );
   }
 
@@ -95,7 +92,7 @@ class Motor extends Peripheral {
    * @param {number} dutyCycle [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
    * @param {number} maxSpeed [0..100]%
    * @param {number} endState One of `Motor.END_STATE_*`
-   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`)
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`, defaults to `Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION`)
    */
   startSpeedForDegrees(
     degrees,
@@ -134,8 +131,14 @@ class Motor extends Peripheral {
    * @param {number} dutyCycleL [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop for primary motor
    * @param {number} dutyCycleR [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop for secondary motor
    * @param {number} maxSpeed [0..100]%
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`, defaults to `Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION`)
    */
-  combinedStartSpeed(dutyCycleL, dutyCycleR, maxSpeed = 100) {
+  combinedStartSpeed(
+    dutyCycleL,
+    dutyCycleR,
+    maxSpeed = 100,
+    useProfile = Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+  ) {
     if (!this.isVirtualDevice) {
       throw new Error("Non-virtual Device cannot start Power on two motors.");
     }
@@ -143,12 +146,7 @@ class Motor extends Peripheral {
       this.portId,
       PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
       Motor.SUB_CMD_START_SPEED_COMBINED,
-      [
-        dutyCycleL,
-        dutyCycleR,
-        maxSpeed,
-        Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
-      ]
+      [dutyCycleL, dutyCycleR, maxSpeed, useProfile]
     );
   }
 
@@ -185,13 +183,15 @@ class Motor extends Peripheral {
    * @param {number} dutyCycleR [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
    * @param {number} maxSpeed [0..100]%
    * @param {number} endState One of `Motor.END_STATE_*`
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`, defaults to `Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION`)
    */
   combinedStartSpeedForTime(
     time,
     dutyCycleL,
     dutyCycleR,
     maxSpeed = 100,
-    endState = Motor.END_STATE_FLOAT
+    endState = Motor.END_STATE_FLOAT,
+    useProfile = Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
   ) {
     if (!this.isVirtualDevice) {
       throw new Error("Non-virtual Device cannot start Power on two motors.");
@@ -206,7 +206,7 @@ class Motor extends Peripheral {
         dutyCycleR,
         maxSpeed,
         endState,
-        Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
+        useProfile
       ]
     );
   }
@@ -220,7 +220,7 @@ class Motor extends Peripheral {
    * @param {number} dutyCycleR [-100..-1] Percentage CCW, [1..100] Percentage CW, [0] to stop
    * @param {number} maxSpeed [0..100]%
    * @param {number} endState One of `Motor.END_STATE_*`
-   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`)
+   * @param {number} useProfile Bitlist containing profiles to use (Select from `Motor.PROFILE_*`, defaults to `Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION`)
    */
   combinedStartSpeedForDegrees(
     degrees,

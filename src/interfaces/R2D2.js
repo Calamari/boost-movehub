@@ -1,4 +1,5 @@
 const MovehubPorts = require("../MovehubPorts");
+const Motor = require("../peripherals/Motor");
 const { promiseTimeout } = require("../helpers");
 
 // The wheels have a radius of 1.75cm, so the perimeter is 10.996cm (let's say 11cm)
@@ -106,6 +107,26 @@ module.exports = class R2D2 {
       },
       stop: () => {
         this.hub.sendMessage(motor.combinedStop());
+        return Promise.resolve();
+      }
+    };
+  }
+
+  get chassis() {
+    const motor = this.hub.ports.get(MovehubPorts.PORT_AB);
+    return {
+      open: () => {
+        this.hub.sendMessage(
+          motor.combinedStartSpeedForDegrees(
+            135,
+            100,
+            100,
+            100,
+            Motor.END_STATE_BREAK,
+            Motor.PROFILE_DO_NOT_USE
+          )
+        );
+        // TODO real promise when finished
         return Promise.resolve();
       }
     };
