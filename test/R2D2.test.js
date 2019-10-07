@@ -3,7 +3,10 @@ const sinon = require("sinon");
 const sinonChai = require("sinon-chai");
 const Peripheral = require("../src/peripherals/Peripheral");
 const Motor = require("../src/peripherals/Motor");
+const TiltSensor = require("../src/peripherals/TiltSensor");
+const VisionSensor = require("../src/peripherals/VisionSensor");
 const MovehubPorts = require("../src/MovehubPorts");
+const PortInputFormatSetup = require("../src/messages/PortInputFormatSetup");
 const Hub = require("../src/Hub");
 const R2D2 = require("../src/interfaces/R2D2");
 const PeripheralFactory = require("../src/PeripheralFactory");
@@ -23,11 +26,103 @@ describe("R2D2 interface", () => {
     peripheral = stubPeripheral(characteristic);
     hub = new Hub(peripheral);
 
+    hub.ports.registry[MovehubPorts.PORT_C] = PeripheralFactory.create(
+      Peripheral.DEV_VISION_SENSOR,
+      MovehubPorts.PORT_C
+    );
     hub.ports.registry[MovehubPorts.PORT_D] = PeripheralFactory.create(
       Peripheral.DEV_MOTOR_EXTERNAL_TACHO,
       MovehubPorts.PORT_D
     );
+    hub.ports.registry[MovehubPorts.PORT_TILT] = PeripheralFactory.create(
+      Peripheral.DEV_TILT_INTERNAL,
+      MovehubPorts.PORT_TILT
+    );
     r2d2 = new R2D2(hub);
+  });
+
+  describe("has tilt sensor", () => {
+    it("can subscribe to updates", () => {
+      const result = r2d2.tiltSensor.subscribe();
+      expect(characteristic.write).to.have.been.calledOnce;
+      expect(characteristic.write.getCall(0).args[0]).to.eql(
+        new Buffer([
+          0x0a,
+          0x00,
+          PortInputFormatSetup.TYPE,
+          MovehubPorts.PORT_TILT,
+          TiltSensor.MODE_2AXIS_ANGLE,
+          0x01,
+          0x00,
+          0x00,
+          0x00,
+          PortInputFormatSetup.ENABLE_NOTIFICATONS
+        ])
+      );
+      expect(result).to.be.instanceOf(Promise);
+    });
+
+    it("can unsubscribe from updates", () => {
+      const result = r2d2.tiltSensor.unsubscribe();
+      expect(characteristic.write).to.have.been.calledOnce;
+      expect(characteristic.write.getCall(0).args[0]).to.eql(
+        new Buffer([
+          0x0a,
+          0x00,
+          PortInputFormatSetup.TYPE,
+          MovehubPorts.PORT_TILT,
+          0x00,
+          0x01,
+          0x00,
+          0x00,
+          0x00,
+          PortInputFormatSetup.DISABLE_NOTIFICATONS
+        ])
+      );
+      expect(result).to.be.instanceOf(Promise);
+    });
+  });
+
+  describe("has vision sensor", () => {
+    it("can subscribe to updates", () => {
+      const result = r2d2.visionSensor.subscribe();
+      expect(characteristic.write).to.have.been.calledOnce;
+      expect(characteristic.write.getCall(0).args[0]).to.eql(
+        new Buffer([
+          0x0a,
+          0x00,
+          PortInputFormatSetup.TYPE,
+          MovehubPorts.PORT_C,
+          VisionSensor.MODE_COLOR_DISTANCE_FLOAT,
+          0x01,
+          0x00,
+          0x00,
+          0x00,
+          PortInputFormatSetup.ENABLE_NOTIFICATONS
+        ])
+      );
+      expect(result).to.be.instanceOf(Promise);
+    });
+
+    it("can unsubscribe from updates", () => {
+      const result = r2d2.visionSensor.unsubscribe();
+      expect(characteristic.write).to.have.been.calledOnce;
+      expect(characteristic.write.getCall(0).args[0]).to.eql(
+        new Buffer([
+          0x0a,
+          0x00,
+          PortInputFormatSetup.TYPE,
+          MovehubPorts.PORT_C,
+          0x00,
+          0x01,
+          0x00,
+          0x00,
+          0x00,
+          PortInputFormatSetup.DISABLE_NOTIFICATONS
+        ])
+      );
+      expect(result).to.be.instanceOf(Promise);
+    });
   });
 
   describe("has a head", () => {

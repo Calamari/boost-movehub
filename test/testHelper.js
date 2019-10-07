@@ -8,12 +8,12 @@ function expectWriteDirectModeData(msg) {
 
   expect(msg.data[5]).to.eql(
     PortOutput.SUB_CMD_WRITE_DIRECT_MODE_DATA,
-    "type is sub command WriteDirectModeData"
+    "Type is sub command WriteDirectModeData"
   );
 
   expect(msg.length).to.gte(
     7,
-    "Lenght must contain at least another sub command and payload"
+    "Length must contain at least another sub command and payload"
   );
 }
 

@@ -1,20 +1,31 @@
 const Peripheral = require("./Peripheral");
 const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
 
-class Voltage extends Peripheral {
+class VoltageSensor extends Peripheral {
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
-    this.displayName = "Voltage";
+    this.displayName = "VoltageSensor";
     this.emitAs = "voltage";
     this.lastValue = null;
-    this.mode = Voltage.MODE_ONE;
   }
 
   /**
    * Creates a message that starts subscribing to updates.
+   *
+   * @param {number} [mode] Mode in which updates should come in (One of `VoltageSensor.MODE_*`)
    */
-  subscribe() {
-    return PortInputFormatSetup.build(this.portId, { mode: this.mode });
+  subscribe(mode = VoltageSensor.MODE_ONE) {
+    this.mode = mode;
+    return PortInputFormatSetup.build(this.portId, { mode });
+  }
+
+  /**
+   * Disable from all updates from hub
+   */
+  unsubscribe() {
+    return PortInputFormatSetup.build(this.portId, {
+      notificationEnabled: PortInputFormatSetup.DISABLE_NOTIFICATONS
+    });
   }
 
   /**
@@ -34,6 +45,6 @@ class Voltage extends Peripheral {
 }
 
 // Don't know what else can this be?
-Voltage.MODE_ONE = 0x00;
+VoltageSensor.MODE_ONE = 0x00;
 
-module.exports = Voltage;
+module.exports = VoltageSensor;

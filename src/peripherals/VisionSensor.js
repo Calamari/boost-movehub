@@ -12,10 +12,21 @@ class VisionSensor extends Peripheral {
 
   /**
    * Creates a message that starts subscribing to updates.
+   *
+   * @param {number} [mode] Mode in which updates should come in (One of `VisionSensor.MODE_*`)
    */
   subscribe(mode = VisionSensor.MODE_COLOR_DISTANCE_FLOAT) {
     this.mode = mode;
-    return PortInputFormatSetup.build(this.portId, { mode: this.mode });
+    return PortInputFormatSetup.build(this.portId, { mode });
+  }
+
+  /**
+   * Disable from all updates from hub
+   */
+  unsubscribe() {
+    return PortInputFormatSetup.build(this.portId, {
+      notificationEnabled: PortInputFormatSetup.DISABLE_NOTIFICATONS
+    });
   }
 
   /**
@@ -25,12 +36,12 @@ class VisionSensor extends Peripheral {
    */
   receiveValue(msg) {
     switch (this.mode) {
-      case VisionSensor.DISTANCE: {
+      case VisionSensor.MODE_DISTANCE: {
         this.lastValue.distance = msg.value;
 
         break;
       }
-      case VisionSensor.DISTANCE_REFLECTED: {
+      case VisionSensor.MODE_DISTANCE_REFLECTED: {
         // Is this the time the light bounces back? 25 seems to be very near
         this.lastValue.distance = msg.value;
         break;
@@ -70,8 +81,8 @@ class VisionSensor extends Peripheral {
 }
 
 // Inspired by https://github.com/undera/pylgbst/blob/master/pylgbst/peripherals.py#L528
-VisionSensor.DISTANCE = 0x01;
-VisionSensor.DISTANCE_REFLECTED = 0x03;
+VisionSensor.MODE_DISTANCE = 0x01;
+VisionSensor.MODE_DISTANCE_REFLECTED = 0x03;
 VisionSensor.MODE_COLOR_RGB = 0x06;
 VisionSensor.MODE_COLOR_DISTANCE_FLOAT = 0x08;
 

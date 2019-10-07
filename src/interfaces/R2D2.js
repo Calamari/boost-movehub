@@ -13,6 +13,66 @@ module.exports = class R2D2 {
     this.hub = hub;
   }
 
+  get visionSensor() {
+    const sensor = this.hub.ports.get(MovehubPorts.PORT_C);
+
+    return {
+      subscribe: () => {
+        this.hub.sendMessage(sensor.subscribe());
+        return Promise.resolve();
+      },
+      unsubscribe: () => {
+        this.hub.sendMessage(sensor.unsubscribe());
+        return Promise.resolve();
+      }
+    };
+  }
+
+  get tiltSensor() {
+    const sensor = this.hub.ports.get(MovehubPorts.PORT_TILT);
+
+    return {
+      subscribe: () => {
+        this.hub.sendMessage(sensor.subscribe());
+        return Promise.resolve();
+      },
+      unsubscribe: () => {
+        this.hub.sendMessage(sensor.unsubscribe());
+        return Promise.resolve();
+      }
+    };
+  }
+
+  get voltageSensor() {
+    const sensor = this.hub.ports.get(MovehubPorts.PORT_VOLTAGE);
+
+    return {
+      subscribe: () => {
+        this.hub.sendMessage(sensor.subscribe());
+        return Promise.resolve();
+      },
+      unsubscribe: () => {
+        this.hub.sendMessage(sensor.unsubscribe());
+        return Promise.resolve();
+      }
+    };
+  }
+
+  get currentSensor() {
+    const sensor = this.hub.ports.get(MovehubPorts.PORT_CURRENT);
+
+    return {
+      subscribe: () => {
+        this.hub.sendMessage(sensor.subscribe());
+        return Promise.resolve();
+      },
+      unsubscribe: () => {
+        this.hub.sendMessage(sensor.unsubscribe());
+        return Promise.resolve();
+      }
+    };
+  }
+
   get rgbLed() {
     const led = this.hub.ports.get(MovehubPorts.PORT_LED);
     return {

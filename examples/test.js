@@ -2,10 +2,11 @@ const Boost = require("../src/Boost");
 const MovehubPorts = require("../src/MovehubPorts");
 const { COLOR_YELLOW, COLOR_RED } = require("../src/peripherals/RgbLed");
 const R2D2 = require("../src/interfaces/R2D2");
+const { waitFor } = require("../src/helpers");
 
 const boost = new Boost("001653aeb339", { logger: console });
 
-boost.on("hubConnected", hub => {
+boost.on("hubConnected", async hub => {
   console.log("hub connected");
 
   // hub.on("tilt", tilt => console.log(tilt));
@@ -24,10 +25,13 @@ boost.on("hubConnected", hub => {
 
   // Is that what we want?
   r2 = new R2D2(hub);
+  r2.visionSensor.subscribe();
+  r2.tiltSensor.subscribe();
   // r2.wheels.driveTime(1200, 10).then(() => {
   // r2.wheels.driveTime(1200, -10);
   // });
   r2.wheels.driveDistance(10, 10);
+
   // r2.head.turnDegrees(-360, 40);
   // hub.startMotorAB(15, 15);
   // hub.led(COLOR_RED);

@@ -59,16 +59,6 @@ module.exports = class Hub extends EventEmitter {
     });
   }
 
-  subscribeToAllPorts() {
-    this._log("debug", `Subscribing to all ports.`);
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_C).subscribe());
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_TILT).subscribe());
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_VOLTAGE).subscribe());
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_CURRENT).subscribe());
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_AB).subscribe());
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).subscribe());
-  }
-
   disconnect() {
     this.sendMessage(HubAction.build(HubAction.DISCONNECT));
   }
@@ -79,90 +69,6 @@ module.exports = class Hub extends EventEmitter {
 
   immediateShutdown() {
     this.sendMessage(HubAction.build(HubAction.IMMEDIATE_SHUTDOWN));
-  }
-
-  /**
-   * Sends message to activate/deactivate main LED with given color.
-   *
-   * @param {number} color
-   */
-  led(color) {
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setColor(color));
-  }
-
-  /**
-   * TODO
-   * @param  {...any} rgb
-   */
-  ledRGB(...rgb) {
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_LED).setRgbColor(...rgb));
-  }
-
-  /**
-   * Sends message to start a Motor on Port D.
-   *
-   * @param {number} dutyCycle
-   */
-  startMotorD(dutyCycle) {
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).startPower(dutyCycle));
-  }
-
-  /**
-   * Sends message to stop a Motor on Port D.
-   */
-  stopMotorD() {
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_D).stop());
-  }
-
-  /**
-   * Sends message to start both Motors on Port A & B.
-   *
-   * @param {number} dutyCycleL
-   * @param {number} dutyCycleR
-   */
-  startMotorAB(dutyCycleL, dutyCycleR) {
-    console.log("dutyCycleL, dutyCycleR", dutyCycleL, dutyCycleR);
-    this.sendMessage(
-      this.ports
-        .get(MovehubPorts.PORT_AB)
-        .combinedStartSpeed(dutyCycleL, dutyCycleR)
-    );
-  }
-
-  /**
-   * Sends message to stop both Motor on Port A & B.
-   */
-  stopMotorAB() {
-    this.sendMessage(this.ports.get(MovehubPorts.PORT_AB).combinedStop());
-  }
-
-  turnMotorAB(degrees, speedL = 100, speedR = 100, maxPower = 100) {
-    this.sendMessage(
-      this.ports
-        .get(MovehubPorts.PORT_AB)
-        .combinedStartSpeedForDegrees(
-          degrees,
-          speedL,
-          speedR,
-          maxPower,
-          Motor.END_STATE_BREAK,
-          Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
-        )
-    );
-  }
-
-  turnMotorD(degrees, speed = 100, maxPower = 100) {
-    this.sendMessage(
-      this.ports
-        .get(MovehubPorts.PORT_D)
-        .startSpeedForDegrees(
-          degrees,
-          speed,
-          maxPower,
-          Motor.END_STATE_BREAK,
-          Motor.PROFILE_ACCELERATION | Motor.PROFILE_DEACCELERATION
-        )
-    );
   }
 
   sendMessage(msg, callback = null) {
@@ -195,7 +101,7 @@ module.exports = class Hub extends EventEmitter {
    * This unsubscribes from all or specifc Hub Alerts.
    * @param {number[]} [filter] List of HubAlert to subscribe to. Default are all.
    */
-  activateAlerts(filter = null) {
+  deactivateAlerts(filter = null) {
     if (filter === null) {
       filter = [
         (HubAlert.LOW_VOLTAGE = 0x01),
@@ -336,7 +242,6 @@ module.exports = class Hub extends EventEmitter {
           msg.toString()
         );
       }
-      // this.parseSensor(data);
     } else if (msg instanceof HubAlert) {
       this._log("info", "Got Alert:", msg.alertTypeToString());
       /**

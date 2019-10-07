@@ -35,5 +35,7 @@ module.exports = {
   int16ToArray,
   int32ToArray,
   promiseTimeout,
-  toHexString
+  toHexString,
+
+  waitFor: promiseTimeout
 };

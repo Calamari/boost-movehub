@@ -12,10 +12,21 @@ class TiltSensor extends Peripheral {
 
   /**
    * Creates a message that starts subscribing to updates.
+   *
+   * @param {number} [mode] Mode in which updates should come in (One of `TiltSensor.MODE_*`)
    */
   subscribe(mode = TiltSensor.MODE_2AXIS_ANGLE) {
     this.mode = mode;
-    return PortInputFormatSetup.build(this.portId, { mode: this.mode });
+    return PortInputFormatSetup.build(this.portId, { mode });
+  }
+
+  /**
+   * Disable from all updates from hub
+   */
+  unsubscribe() {
+    return PortInputFormatSetup.build(this.portId, {
+      notificationEnabled: PortInputFormatSetup.DISABLE_NOTIFICATONS
+    });
   }
 
   /**
