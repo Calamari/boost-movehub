@@ -8,8 +8,7 @@ class RgbLed extends Peripheral {
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "RgbLed";
-    this.lastValue = null;
-    this.mode = RgbLed.MODE_2AXIS_ANGLE;
+    this.currentColor = RgbLed.COLOR_OFF;
   }
 
   /**
@@ -20,10 +19,12 @@ class RgbLed extends Peripheral {
    * @param {number} color One of `RgbLed.COLOR_*`
    */
   setColor(color) {
+    this.mode = INDEX_MODE;
+    this.currentColor = color;
     return PortOutput.buildWriteDirectModeData(
       this.portId,
-      PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
-      INDEX_MODE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      this.mode,
       [color]
     );
   }
@@ -40,10 +41,11 @@ class RgbLed extends Peripheral {
    * @param {number} blue Blue part of RGB value 0…255
    */
   setRgbColor(red, green, blue) {
+    this.mode = RGB_MODE;
     return PortOutput.buildWriteDirectModeData(
       this.portId,
       PortOutput.SC_FLAGS.NONE,
-      RGB_MODE,
+      this.mode,
       [red, green, blue]
     );
   }
@@ -56,8 +58,8 @@ class RgbLed extends Peripheral {
     this._log("info", `.receiveValue not implemetned`);
   }
 
-  receiveCommandFeedback(msg) {
-    this._log("debug", `rgbLed received feedback:`, msg);
+  receiveCommandFeedback(value) {
+    this._log("debug", `rgbLed received feedback:`, value);
   }
 }
 

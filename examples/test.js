@@ -36,13 +36,14 @@ boost.on("hubConnected", async hub => {
 
   // await waitFor(500);
   // r2.visionSensor.unsubscribe();
-  await r2.head.turnDegrees(30, 40);
-  await r2.head.turnTime(350, -30);
+  // await r2.head.turnDegrees(30, 40);
+  // await r2.head.turnTime(350, -30);
+  await r2.rgbLed.setColor(4);
   // hub.startMotorAB(15, 15);
   // hub.led(COLOR_RED);
   // r2.rgbLed.setColor(COLOR_YELLOW);
   setTimeout(() => {
-    r2.head.turn(10);
+    // r2.head.turn(10);
     // r2.wheels.forward(10);
     // hub.sendMessage(
     //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(10, 10)
@@ -52,7 +53,7 @@ boost.on("hubConnected", async hub => {
     // hub.startMotorD(20);
     // hub.led(COLOR_YELLOW);
     setTimeout(() => {
-      r2.head.stop();
+      // r2.head.stop();
       // hub.sendMessage(
       //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(0)
       // );

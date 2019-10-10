@@ -20,8 +20,6 @@ class MovehubPorts {
       ioType: msg.ioType,
       ioMembers: msg.ioMembers
     };
-
-    console.log("registry:", this.registry);
   }
 
   get builtInDevicesRegistered() {

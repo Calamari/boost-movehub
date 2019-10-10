@@ -24,7 +24,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.buildWriteDirectModeData(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_POWER,
       [dutyCycle]
     );
@@ -49,7 +50,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.build(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_SPEED,
       [dutyCycle, maxSpeed, useProfile]
     );
@@ -77,7 +79,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.build(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_SPEED_FOR_TIME,
       [...int16ToArray(time), dutyCycle, maxSpeed, endState, useProfile]
     );
@@ -109,7 +112,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.build(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_SPEED_FOR_DEGREES,
       [...int32ToArray(degrees), dutyCycle, maxSpeed, endState, useProfile]
     );
@@ -143,7 +147,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.build(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_SPEED_COMBINED,
       [dutyCycleL, dutyCycleR, maxSpeed, useProfile]
     );
@@ -197,7 +202,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.build(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_SPEED_FOR_TIME_COMBINED,
       [
         ...int16ToArray(time),
@@ -239,7 +245,8 @@ class Motor extends Peripheral {
     }
     return PortOutput.build(
       this.portId,
-      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE,
+      PortOutput.SC_FLAGS.EXECUTE_IMMEDIATE |
+        PortOutput.SC_FLAGS.COMMAND_FEEDBACK,
       Motor.SUB_CMD_START_SPEED_FOR_DEGREES_COMBINED,
       [
         ...int32ToArray(degrees),
