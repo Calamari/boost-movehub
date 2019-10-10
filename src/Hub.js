@@ -28,7 +28,7 @@ module.exports = class Hub extends EventEmitter {
     this.logger = options.logger || {};
     this.doReconnection = options.reconnect;
     this.neededDevices = options.neededDevices;
-    this.ports = new MovehubPorts();
+    this.ports = new MovehubPorts({ logger: this.logger });
 
     this.connect();
   }
