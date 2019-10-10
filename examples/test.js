@@ -25,21 +25,24 @@ boost.on("hubConnected", async hub => {
 
   // Is that what we want?
   r2 = new R2D2(hub);
-  r2.visionSensor.subscribe();
-  r2.tiltSensor.subscribe();
+  // r2.visionSensor.subscribe();
+  // r2.tiltSensor.subscribe();
+  // await r2.head.subscribe();
   // r2.wheels.driveTime(1200, 10).then(() => {
   // r2.wheels.driveTime(1200, -10);
   // });
   // r2.wheels.driveDistance(10, 10);
-  r2.chassis.open();
+  // r2.chassis.open();
 
   // await waitFor(500);
   // r2.visionSensor.unsubscribe();
-  // r2.head.turnDegrees(-360, 40);
+  await r2.head.turnDegrees(30, 40);
+  await r2.head.turnTime(350, -30);
   // hub.startMotorAB(15, 15);
   // hub.led(COLOR_RED);
   // r2.rgbLed.setColor(COLOR_YELLOW);
   setTimeout(() => {
+    r2.head.turn(10);
     // r2.wheels.forward(10);
     // hub.sendMessage(
     //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(10, 10)
@@ -49,6 +52,7 @@ boost.on("hubConnected", async hub => {
     // hub.startMotorD(20);
     // hub.led(COLOR_YELLOW);
     setTimeout(() => {
+      r2.head.stop();
       // hub.sendMessage(
       //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(0)
       // );

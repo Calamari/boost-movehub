@@ -19,12 +19,10 @@ module.exports = class R2D2 {
 
     return {
       subscribe: () => {
-        this.hub.sendMessage(sensor.subscribe());
-        return Promise.resolve();
+        return this._subscribeTo(sensor);
       },
       unsubscribe: () => {
-        this.hub.sendMessage(sensor.unsubscribe());
-        return Promise.resolve();
+        return this._unsubscribeFrom(sensor);
       }
     };
   }
@@ -34,12 +32,10 @@ module.exports = class R2D2 {
 
     return {
       subscribe: () => {
-        this.hub.sendMessage(sensor.subscribe());
-        return Promise.resolve();
+        return this._subscribeTo(sensor);
       },
       unsubscribe: () => {
-        this.hub.sendMessage(sensor.unsubscribe());
-        return Promise.resolve();
+        return this._unsubscribeFrom(sensor);
       }
     };
   }
@@ -49,12 +45,10 @@ module.exports = class R2D2 {
 
     return {
       subscribe: () => {
-        this.hub.sendMessage(sensor.subscribe());
-        return Promise.resolve();
+        return this._subscribeTo(sensor);
       },
       unsubscribe: () => {
-        this.hub.sendMessage(sensor.unsubscribe());
-        return Promise.resolve();
+        return this._unsubscribeFrom(sensor);
       }
     };
   }
@@ -64,12 +58,10 @@ module.exports = class R2D2 {
 
     return {
       subscribe: () => {
-        this.hub.sendMessage(sensor.subscribe());
-        return Promise.resolve();
+        return this._subscribeTo(sensor);
       },
       unsubscribe: () => {
-        this.hub.sendMessage(sensor.unsubscribe());
-        return Promise.resolve();
+        return this._unsubscribeFrom(sensor);
       }
     };
   }
@@ -135,8 +127,18 @@ module.exports = class R2D2 {
   get head() {
     const head = this.hub.ports.get(MovehubPorts.PORT_D);
     return {
+      subscribe: () => {
+        return this._subscribeTo(sensor);
+      },
+      unsubscribe: () => {
+        return this._unsubscribeFrom(sensor);
+      },
       turn: speed => {
         this.hub.sendMessage(head.startSpeed(speed));
+        return Promise.resolve();
+      },
+      stop: () => {
+        this.hub.sendMessage(head.stop());
         return Promise.resolve();
       },
       turnDegrees: (degrees, speed) => {
@@ -144,13 +146,30 @@ module.exports = class R2D2 {
         this.hub.sendMessage(
           head.startSpeedForDegrees(Math.round(1.66 * degrees), speed)
         );
-        // TODO real promise when finished
-        return Promise.resolve();
+        return new Promise(resolve => {
+          head.once("stop", resolve);
+        });
       },
       turnTime: (time, speed) => {
         this.hub.sendMessage(head.startSpeedForTime(time, speed));
-        return promiseTimeout(time);
+        return new Promise(resolve => {
+          head.once("stop", resolve);
+        });
       }
     };
+  }
+
+  _subscribeTo(peripheral) {
+    return new Promise(resolve => {
+      peripheral.once("subscribed", resolve);
+      this.hub.sendMessage(peripheral.subscribe());
+    });
+  }
+
+  _unsubscribeFrom(peripheral) {
+    return new Promise(resolve => {
+      peripheral.once("unsubscribed", resolve);
+      this.hub.sendMessage(peripheral.unsubscribe());
+    });
   }
 };
