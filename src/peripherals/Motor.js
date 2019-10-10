@@ -1,5 +1,4 @@
 const Peripheral = require("./Peripheral");
-const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
 const PortOutput = require("../messages/PortOutput");
 const PortOutputCommandFeedbackMessage = require("../messages/PortOutputCommandFeedbackMessage");
 const { int16ToArray, int32ToArray } = require("../helpers");
@@ -9,7 +8,7 @@ class Motor extends Peripheral {
     super(ioType, portId, options);
     this.displayName = "Motor";
     this.status = Motor.STOPPED;
-    this.mode = Motor.MODE_MOTOR;
+    this.defaultMode = Motor.MODE_MOTOR;
   }
 
   /**
@@ -264,8 +263,8 @@ class Motor extends Peripheral {
    * Receives and processes message with value from sensor.
    * @param {PortValueSingleMessage} msg
    */
-  receiveValue(_msg) {
-    this._log("info", `.receiveValue not implemetned`);
+  receiveValue(msg) {
+    console.log("info", `received value`, msg.value, "on port", msg.portId);
   }
 
   /**
@@ -290,13 +289,6 @@ class Motor extends Peripheral {
        */
       this.emit("stop");
     }
-  }
-
-  /**
-   * Creates a message that starts subscribing to updates.
-   */
-  subscribe() {
-    return PortInputFormatSetup.build(this.portId, { mode: this.mode });
   }
 }
 

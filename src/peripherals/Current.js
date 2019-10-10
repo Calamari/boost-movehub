@@ -1,5 +1,4 @@
 const Peripheral = require("./Peripheral");
-const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
 
 class CurrentSensor extends Peripheral {
   constructor(ioType, portId, options = undefined) {
@@ -7,25 +6,7 @@ class CurrentSensor extends Peripheral {
     this.displayName = "CurrentSensor";
     this.emitAs = "current";
     this.lastValue = null;
-  }
-
-  /**
-   * Creates a message that starts subscribing to updates.
-   *
-   * @param {number} [mode] Mode in which updates should come in (One of `CurrentSensor.MODE_*`)
-   */
-  subscribe(mode = CurrentSensor.MODE_ONE) {
-    this.mode = mode;
-    return PortInputFormatSetup.build(this.portId, { mode });
-  }
-
-  /**
-   * Disable from all updates from hub
-   */
-  unsubscribe() {
-    return PortInputFormatSetup.build(this.portId, {
-      notificationEnabled: PortInputFormatSetup.DISABLE_NOTIFICATONS
-    });
+    this.defaultMode = CurrentSensor.MODE_ONE;
   }
 
   /**

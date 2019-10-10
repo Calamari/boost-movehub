@@ -1,5 +1,4 @@
 const Peripheral = require("./Peripheral");
-const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
 const { toHexString } = require("../helpers");
 
 class VisionSensor extends Peripheral {
@@ -8,25 +7,7 @@ class VisionSensor extends Peripheral {
     this.displayName = "VisionSensor";
     this.emitAs = "vision";
     this.lastValue = {};
-  }
-
-  /**
-   * Creates a message that starts subscribing to updates.
-   *
-   * @param {number} [mode] Mode in which updates should come in (One of `VisionSensor.MODE_*`)
-   */
-  subscribe(mode = VisionSensor.MODE_COLOR_DISTANCE_FLOAT) {
-    this.mode = mode;
-    return PortInputFormatSetup.build(this.portId, { mode });
-  }
-
-  /**
-   * Disable from all updates from hub
-   */
-  unsubscribe() {
-    return PortInputFormatSetup.build(this.portId, {
-      notificationEnabled: PortInputFormatSetup.DISABLE_NOTIFICATONS
-    });
+    this.defaultMode = VisionSensor.MODE_COLOR_DISTANCE_FLOAT;
   }
 
   /**

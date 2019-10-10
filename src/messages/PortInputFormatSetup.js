@@ -1,4 +1,5 @@
 const PortInputFormat = require("./PortInputFormat");
+const { int32ToArray } = require("../helpers");
 
 /**
  * Downstream message to setup receiving single value sensor updates
@@ -16,12 +17,12 @@ class PortInputFormatSetup extends PortInputFormat {
  *
  * @param {number} portId Port ID to subscribe updates for
  * @param {number} [options.mode]
- * @param {number} [options.deltaInterval] Interval of messages (in what exactly? ms?)
+ * @param {number} [options.deltaInterval] Interval of change the value has to change to trigger update (1 is kind of live data).
  * @param {number} [options.notificationEnabled] Defines if messages should be send back on a regular base.
  */
 PortInputFormatSetup.build = function build(portId, options = {}) {
   const mode = options.mode || 0x00;
-  const deltaInterval = options.deltaInterval || 0x01; // TODO: Figure out: delta of what exactly?
+  const deltaInterval = options.deltaInterval || 1;
   const notificationEnabled =
     options.notificationEnabled !== undefined
       ? options.notificationEnabled
@@ -33,10 +34,7 @@ PortInputFormatSetup.build = function build(portId, options = {}) {
       PortInputFormatSetup.TYPE,
       portId,
       mode,
-      deltaInterval,
-      0x00,
-      0x00,
-      0x00,
+      ...int32ToArray(deltaInterval),
       notificationEnabled
     ])
   );

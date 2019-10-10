@@ -4,12 +4,13 @@ const MessageFactory = require("./MessageFactory");
 const MovehubPorts = require("./MovehubPorts");
 const PortOutputCommandFeedbackMessage = require("./messages/PortOutputCommandFeedbackMessage");
 const HubAttachedMessage = require("./messages/HubAttachedMessage");
+const PortInputFormat = require("./messages/PortInputFormat");
 const PortValueSingleMessage = require("./messages/PortValueSingleMessage");
 const UnknownMessage = require("./messages/UnknownMessage");
 const HubAction = require("./messages/HubAction");
 const HubAlert = require("./messages/HubAlert");
 
-const Motor = require("./peripherals/Motor");
+const { toHexString } = require("./helpers");
 
 const DEFAULT_OPTIONS = {
   logger: {},
@@ -219,6 +220,25 @@ module.exports = class Hub extends EventEmitter {
          */
         this.emit("connect");
         this.connected = true;
+      }
+    } else if (msg instanceof PortInputFormat) {
+      this._log("debug", `Got answer for setup on ${toHexString(msg.portId)}`);
+      const peripheral = this.ports.get(msg.portId);
+      if (peripheral) {
+        if (peripheral.receiveSubscriptionAck) {
+          peripheral.receiveSubscriptionAck(msg);
+        } else {
+          this._log(
+            "warn",
+            `Undefined method .receiveSubscriptionAck for peripheral ${peripheral}`
+          );
+        }
+      } else {
+        this._log(
+          "warn",
+          `Received message for unregistered port ${msg.portId}`,
+          msg.toString()
+        );
       }
     } else if (msg instanceof PortValueSingleMessage) {
       this._log("debug", `Got value: ${msg.toString()}`);

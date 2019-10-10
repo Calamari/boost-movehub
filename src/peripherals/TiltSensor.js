@@ -1,5 +1,4 @@
 const Peripheral = require("./Peripheral");
-const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
 const { toHexString } = require("../helpers");
 
 class TiltSensor extends Peripheral {
@@ -8,25 +7,7 @@ class TiltSensor extends Peripheral {
     this.displayName = "TiltSensor";
     this.emitAs = "tilt";
     this.lastValue = null;
-  }
-
-  /**
-   * Creates a message that starts subscribing to updates.
-   *
-   * @param {number} [mode] Mode in which updates should come in (One of `TiltSensor.MODE_*`)
-   */
-  subscribe(mode = TiltSensor.MODE_2AXIS_ANGLE) {
-    this.mode = mode;
-    return PortInputFormatSetup.build(this.portId, { mode });
-  }
-
-  /**
-   * Disable from all updates from hub
-   */
-  unsubscribe() {
-    return PortInputFormatSetup.build(this.portId, {
-      notificationEnabled: PortInputFormatSetup.DISABLE_NOTIFICATONS
-    });
+    this.defaultMode = TiltSensor.MODE_2AXIS_ANGLE;
   }
 
   /**

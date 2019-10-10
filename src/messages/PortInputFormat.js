@@ -19,9 +19,8 @@ class PortInputFormat extends DeviceMessage {
     return this.data[4];
   }
 
-  // FIXME: Not quite sure if that is in deed 5 or more like 5-8 (Uint32)
   get deltaInterval() {
-    return this.data[5];
+    return this.data.readInt32LE(5);
   }
 
   get notificationEnabled() {

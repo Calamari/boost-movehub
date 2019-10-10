@@ -1,5 +1,7 @@
 const { EventEmitter } = require("events");
 
+const PortInputFormatSetup = require("../messages/PortInputFormatSetup");
+
 const DEFAULT_OPTIONS = {
   logger: {}
 };
@@ -23,6 +25,34 @@ class Peripheral extends EventEmitter {
   _log(type, ...message) {
     this.logger[type] &&
       this.logger[type](`"[${this.displayName}]"`, ...message);
+  }
+
+  /**
+   * Creates a message that starts subscribing to updates.
+   *
+   * @param {number} [mode] Mode in which updates should come in (One of `<YourPeripheral>.MODE_*`)
+   */
+  subscribe(mode = this.defaultMode) {
+    return PortInputFormatSetup.build(this.portId, { mode });
+  }
+
+  /**
+   * Disable from all updates from hub.
+   */
+  unsubscribe() {
+    return PortInputFormatSetup.build(this.portId, {
+      notificationEnabled: PortInputFormatSetup.DISABLE_NOTIFICATONS
+    });
+  }
+
+  /**
+   * Handle acknowledge message for prior subscribe or unsubscribe.
+   * @param {PortInputFormat} msg
+   */
+  receiveSubscriptionAck(msg) {
+    this.emit(msg.notificationEnabled ? "subscribed" : "unsubscribed");
+    this._log("debug", "ack", msg.toString());
+    this.mode = msg.mode;
   }
 }
 
