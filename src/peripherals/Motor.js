@@ -272,22 +272,25 @@ class Motor extends Peripheral {
    *
    * @param {number} value One of `PortOutputCommandFeedbackMessage.ACTION_*`
    */
-  receiveFeedback(value) {
+  receiveCommandFeedback(value) {
     this._log("debug", "Motor feedback", value);
-    if (value === PortOutputCommandFeedbackMessage.ACTION_START) {
-      this.status = Motor.RUNNING;
-      /**
-       * Fires when Motor starts running.
-       * @event Motor#start
-       */
-      this.emit("start");
-    } else if (value === PortOutputCommandFeedbackMessage.ACTION_STOP) {
-      this.status = Motor.STOPPED;
-      /**
-       * Fires when Motor finished running.
-       * @event Motor#stop
-       */
-      this.emit("stop");
+    switch (value) {
+      case PortOutputCommandFeedbackMessage.ACTION_START:
+        this.status = Motor.RUNNING;
+        /**
+         * Fires when Motor starts running.
+         * @event Motor#start
+         */
+        this.emit("start");
+        break;
+      case PortOutputCommandFeedbackMessage.ACTION_STOP:
+        this.status = Motor.STOPPED;
+        /**
+         * Fires when Motor finished running.
+         * @event Motor#stop
+         */
+        this.emit("stop");
+        break;
     }
   }
 }

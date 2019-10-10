@@ -274,8 +274,13 @@ module.exports = class Hub extends EventEmitter {
       const data = msg.valuesForPorts;
       Object.keys(data).forEach(portId => {
         const peripheral = this.ports.get(portId);
-        if (peripheral.receiveFeedback) {
-          peripheral.receiveFeedback(data[portId]);
+        if (peripheral.receiveCommandFeedback) {
+          peripheral.receiveCommandFeedback(data[portId]);
+        } else {
+          this._log(
+            "warn",
+            `Undefined method .receiveCommandFeedback for peripheral ${peripheral}`
+          );
         }
       });
     } else if (msg instanceof UnknownMessage) {

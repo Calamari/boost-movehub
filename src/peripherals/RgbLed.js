@@ -56,7 +56,7 @@ class RgbLed extends Peripheral {
     this._log("info", `.receiveValue not implemetned`);
   }
 
-  receiveFeedback(msg) {
+  receiveCommandFeedback(msg) {
     this._log("debug", `rgbLed received feedback:`, msg);
   }
 }
