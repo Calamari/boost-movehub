@@ -24,7 +24,11 @@ class Peripheral extends EventEmitter {
 
   _log(type, ...message) {
     this.logger[type] &&
-      this.logger[type](`"[${this.displayName}]"`, ...message);
+      this.logger[type](
+        `[${this.displayName}]`,
+        new Date().toISOString(),
+        ...message
+      );
   }
 
   /**
