@@ -6,12 +6,33 @@ const { promiseTimeout } = require("../helpers");
 const WHEEL_PERIMETER = 11;
 const DEGREES_PER_CM = 360 / WHEEL_PERIMETER;
 
+const EMIT_TO_SENSOR = {
+  color: MovehubPorts.PORT_C,
+  current: MovehubPorts.PORT_CURRENT,
+  distance: MovehubPorts.PORT_C,
+  tilt: MovehubPorts.PORT_TILT,
+  voltage: MovehubPorts.PORT_VOLTAGE
+};
 /**
  * Interface to work with your R2D2 robot.
  */
 module.exports = class R2D2 {
-  constructor(hub) {
+  constructor(hub, options = {}) {
     this.hub = hub;
+    this.logger = options.logger || {};
+  }
+
+  async on(what, cb) {
+    const portId = EMIT_TO_SENSOR[what];
+    if (!portId) {
+      this._log("warn", `Don't know on what port to listen for event ${what}`);
+      return;
+    }
+    const sensor = this.hub.ports.get(MovehubPorts.PORT_C);
+    if (!sensor.subscriptionActive) {
+      await this._subscribeTo(sensor);
+    }
+    return sensor.on(what, cb);
   }
 
   get visionSensor() {
@@ -133,6 +154,22 @@ module.exports = class R2D2 {
         return new Promise(resolve => {
           motor.once("stop", resolve);
         });
+      },
+      close: () => {
+        // TODO: this does not work yet
+        this.hub.sendMessage(
+          motor.combinedStartSpeedForDegrees(
+            -235,
+            100,
+            100,
+            100,
+            Motor.END_STATE_BREAK,
+            Motor.PROFILE_DO_NOT_USE
+          )
+        );
+        return new Promise(resolve => {
+          motor.once("stop", resolve);
+        });
       }
     };
   }
@@ -185,5 +222,10 @@ module.exports = class R2D2 {
       peripheral.once("unsubscribed", resolve);
       this.hub.sendMessage(peripheral.unsubscribe());
     });
+  }
+
+  _log(type, ...message) {
+    this.logger[type] &&
+      this.logger[type]("[R2D2]", new Date().toISOString(), ...message);
   }
 };

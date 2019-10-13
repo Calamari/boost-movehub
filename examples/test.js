@@ -11,87 +11,96 @@ const { waitFor } = require("../src/helpers");
 const boost = new Boost("001653aeb339", { logger: console });
 
 boost.on("hubConnected", async hub => {
-  console.log("hub connected");
+  try {
+    console.log("hub connected");
 
-  // hub.on("tilt", tilt => console.log(tilt));
-  // hub.activateAlerts();
+    // hub.on("tilt", tilt => console.log(tilt));
+    // hub.activateAlerts();
 
-  // hub.subscribeToAllPorts();
+    // hub.subscribeToAllPorts();
 
-  // hub.turnMotorAB(180, 20, 20);
-  // hub.ports.get(16).once("stop", () => {
-  //   console.log("It stopped turn back!");
-  // });
+    // hub.turnMotorAB(180, 20, 20);
+    // hub.ports.get(16).once("stop", () => {
+    //   console.log("It stopped turn back!");
+    // });
 
-  hub.on("vision", val => {
-    console.log("vision", val);
-  });
+    hub.on("vision", val => {
+      console.log("vision", val);
+    });
 
-  // Is that what we want?
-  r2 = new R2D2(hub);
-  // r2.visionSensor.subscribe();
-  // r2.tiltSensor.subscribe();
-  // await r2.head.subscribe();
-  // r2.wheels.driveTime(1200, 10).then(() => {
-  // r2.wheels.driveTime(1200, -10);
-  // });
-  // r2.wheels.driveDistance(10, 10);
-  const isOpen = await r2.chassis.isOpen();
-  if (isOpen) {
-    await r2.rgbLed.setColor(COLOR_GREEN);
-  } else {
-    await r2.chassis.open();
-    await r2.rgbLed.setColor(COLOR_YELLOW);
-  }
+    // Is that what we want?
+    r2 = new R2D2(hub, { logger: console });
+    // r2.visionSensor.subscribe();
+    // r2.tiltSensor.subscribe();
+    // await r2.head.subscribe();
+    // r2.wheels.driveTime(1200, 10).then(() => {
+    // r2.wheels.driveTime(1200, -10);
+    // });
+    // r2.wheels.driveDistance(10, 10);
+    const isOpen = await r2.chassis.isOpen();
+    if (isOpen) {
+      await r2.rgbLed.setColor(COLOR_GREEN);
+    } else {
+      // await r2.chassis.open();
+      await r2.rgbLed.setColor(COLOR_YELLOW);
+    }
 
-  // await waitFor(500);
-  // r2.visionSensor.unsubscribe();
-  // await r2.head.turnDegrees(30, 40);
-  // await r2.head.turnTime(350, -30);
-  // await r2.rgbLed.setColor(4);
-  // hub.startMotorAB(15, 15);
-  // hub.led(COLOR_RED);
-  // r2.rgbLed.setColor(COLOR_YELLOW);
-  setTimeout(() => {
-    // r2.head.turn(10);
-    // r2.wheels.forward(10);
-    // hub.sendMessage(
-    //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(10, 10)
-    // );
+    await r2.wheels.drive(30);
+    r2.on("distance", async distance => {
+      if (distance < 6) {
+        await r2.wheels.driveDistance(20, 30);
+      }
+    });
 
-    // hub.startMotorAB(-15, 15);
-    // hub.startMotorD(20);
-    // hub.led(COLOR_YELLOW);
+    // await waitFor(500);
+    // r2.visionSensor.unsubscribe();
+    // await r2.head.turnDegrees(30, 40);
+    // await r2.head.turnTime(350, -30);
+    // await r2.rgbLed.setColor(4);
+    // hub.startMotorAB(15, 15);
+    // hub.led(COLOR_RED);
+    // r2.rgbLed.setColor(COLOR_YELLOW);
     setTimeout(() => {
-      // r2.head.stop();
+      // r2.head.turn(10);
+      // r2.wheels.forward(10);
       // hub.sendMessage(
-      //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(0)
+      //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(10, 10)
       // );
-      // r2.rgbLed.setColor(COLOR_YELLOW);
-      // r2.wheels.stop();
-      // hub.startMotorAB(10, 10);
+
+      // hub.startMotorAB(-15, 15);
+      // hub.startMotorD(20);
+      // hub.led(COLOR_YELLOW);
       setTimeout(() => {
-        // hub.led(COLOR_RED);
-        // hub.stopMotorAB();
-      }, 500);
+        // r2.head.stop();
+        // hub.sendMessage(
+        //   hub.ports.get(MovehubPorts.PORT_AB).combinedStartSpeed(0)
+        // );
+        // r2.rgbLed.setColor(COLOR_YELLOW);
+        // r2.wheels.stop();
+        // hub.startMotorAB(10, 10);
+        setTimeout(() => {
+          // hub.led(COLOR_RED);
+          // hub.stopMotorAB();
+        }, 500);
+      }, 1000);
     }, 1000);
-  }, 1000);
 
-  // let g = 0;
-  // const ledInt = setInterval(() => {
-  //   hub.led(++g);
-  //   // g += 25;
-  //   // hub.ledRGB(g, g, 255 - g);
-  // }, 500);
+    // let g = 0;
+    // const ledInt = setInterval(() => {
+    //   hub.led(++g);
+    //   // g += 25;
+    //   // hub.ledRGB(g, g, 255 - g);
+    // }, 500);
 
-  setTimeout(() => {
-    // clearInterval(ledInt);
+    await waitFor(500);
     hub.switchOff();
 
-    setTimeout(() => {
-      process.exit(0);
-    }, 500);
-  }, 5000);
+    await waitFor(500);
+    process.exit(0);
+  } catch (err) {
+    console.error(err);
+    process.exit(0);
+  }
 });
 
 boost.startScanning();

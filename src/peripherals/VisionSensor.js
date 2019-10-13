@@ -50,10 +50,6 @@ class VisionSensor extends Peripheral {
           distance += 1.0 / partial;
         }
 
-        value = {
-          color,
-          distance
-        };
         this.setValue({
           color,
           distance
@@ -67,6 +63,20 @@ class VisionSensor extends Peripheral {
             this.mode
           )}`
         );
+    }
+  }
+
+  setValue(value) {
+    this.lastValue = value;
+    this.emit("value", value);
+    if (value.distance) {
+      this.emit("distance", value.distance);
+    }
+    if (value.color) {
+      this.emit("color", value.color);
+    }
+    if (value.rgb) {
+      this.emit("color", value.rgb);
     }
   }
 }
