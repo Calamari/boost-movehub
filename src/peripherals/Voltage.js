@@ -5,7 +5,6 @@ class VoltageSensor extends Peripheral {
     super(ioType, portId, options);
     this.displayName = "VoltageSensor";
     this.emitAs = "voltage";
-    this.lastValue = null;
     this.defaultMode = VoltageSensor.MODE_ONE;
   }
 
@@ -17,7 +16,7 @@ class VoltageSensor extends Peripheral {
   receiveValue(msg) {
     // Formula thanks to https://github.com/undera/pylgbst
     const volts = (9600.0 * msg.value) / 3893.0 / 1000.0;
-    this.lastValue = volts;
+    this.setValue(volts);
   }
 
   toString() {

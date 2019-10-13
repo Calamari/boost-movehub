@@ -7,7 +7,7 @@ const WHEEL_PERIMETER = 11;
 const DEGREES_PER_CM = 360 / WHEEL_PERIMETER;
 
 /**
- * Interface to work with R2D2 robot
+ * Interface to work with your R2D2 robot.
  */
 module.exports = class R2D2 {
   constructor(hub) {
@@ -68,6 +68,7 @@ module.exports = class R2D2 {
 
   get rgbLed() {
     const led = this.hub.ports.get(MovehubPorts.PORT_LED);
+
     return {
       setColor: c => {
         this.hub.sendMessage(led.setColor(c));
@@ -78,6 +79,7 @@ module.exports = class R2D2 {
 
   get wheels() {
     const motor = this.hub.ports.get(MovehubPorts.PORT_AB);
+
     return {
       drive: speed => {
         this.hub.sendMessage(motor.combinedStartSpeed(speed, speed));
@@ -106,7 +108,17 @@ module.exports = class R2D2 {
 
   get chassis() {
     const motor = this.hub.ports.get(MovehubPorts.PORT_AB);
+    const tiltSensor = this.hub.ports.get(MovehubPorts.PORT_TILT);
+
+    // TODO: add method that checks if chassis is currenlty open
     return {
+      isOpen: async () => {
+        if (!tiltSensor.subscriptionActive) {
+          await this._subscribeTo(tiltSensor);
+        }
+        const { pitch } = await tiltSensor.getValueAsync();
+        return pitch >= 179 && pitch <= 181;
+      },
       open: () => {
         this.hub.sendMessage(
           motor.combinedStartSpeedForDegrees(
@@ -118,14 +130,16 @@ module.exports = class R2D2 {
             Motor.PROFILE_DO_NOT_USE
           )
         );
-        // TODO real promise when finished
-        return Promise.resolve();
+        return new Promise(resolve => {
+          motor.once("stop", resolve);
+        });
       }
     };
   }
 
   get head() {
     const head = this.hub.ports.get(MovehubPorts.PORT_D);
+
     return {
       subscribe: () => {
         return this._subscribeTo(sensor);

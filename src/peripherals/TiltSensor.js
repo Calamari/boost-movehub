@@ -6,7 +6,6 @@ class TiltSensor extends Peripheral {
     super(ioType, portId, options);
     this.displayName = "TiltSensor";
     this.emitAs = "tilt";
-    this.lastValue = null;
     this.defaultMode = TiltSensor.MODE_2AXIS_ANGLE;
   }
 
@@ -20,10 +19,10 @@ class TiltSensor extends Peripheral {
       case TiltSensor.MODE_2AXIS_ANGLE: {
         const roll = msg.payload[0];
         const pitch = msg.payload[1];
-        this.lastValue = {
+        this.setValue({
           roll,
           pitch
-        };
+        });
         break;
       }
       case TiltSensor.MODE_2AXIS_SIMPLE: {

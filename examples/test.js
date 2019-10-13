@@ -1,6 +1,10 @@
 const Boost = require("../src/Boost");
 const MovehubPorts = require("../src/MovehubPorts");
-const { COLOR_YELLOW, COLOR_RED } = require("../src/peripherals/RgbLed");
+const {
+  COLOR_GREEN,
+  COLOR_YELLOW,
+  COLOR_RED
+} = require("../src/peripherals/RgbLed");
 const R2D2 = require("../src/interfaces/R2D2");
 const { waitFor } = require("../src/helpers");
 
@@ -32,13 +36,19 @@ boost.on("hubConnected", async hub => {
   // r2.wheels.driveTime(1200, -10);
   // });
   // r2.wheels.driveDistance(10, 10);
-  // r2.chassis.open();
+  const isOpen = await r2.chassis.isOpen();
+  if (isOpen) {
+    await r2.rgbLed.setColor(COLOR_GREEN);
+  } else {
+    await r2.chassis.open();
+    await r2.rgbLed.setColor(COLOR_YELLOW);
+  }
 
   // await waitFor(500);
   // r2.visionSensor.unsubscribe();
   // await r2.head.turnDegrees(30, 40);
   // await r2.head.turnTime(350, -30);
-  await r2.rgbLed.setColor(4);
+  // await r2.rgbLed.setColor(4);
   // hub.startMotorAB(15, 15);
   // hub.led(COLOR_RED);
   // r2.rgbLed.setColor(COLOR_YELLOW);

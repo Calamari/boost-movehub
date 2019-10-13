@@ -6,7 +6,6 @@ class VisionSensor extends Peripheral {
     super(ioType, portId, options);
     this.displayName = "VisionSensor";
     this.emitAs = "vision";
-    this.lastValue = {};
     this.defaultMode = VisionSensor.MODE_COLOR_DISTANCE_FLOAT;
   }
 
@@ -16,24 +15,31 @@ class VisionSensor extends Peripheral {
    * @param {PortValueSingleMessage} msg
    */
   receiveValue(msg) {
+    const value = { ...(this.lastValue || {}) };
     switch (this.mode) {
       case VisionSensor.MODE_DISTANCE: {
-        this.lastValue.distance = msg.value;
+        this.setValue({
+          ...value,
+          distance: msg.value
+        });
 
         break;
       }
       case VisionSensor.MODE_DISTANCE_REFLECTED: {
         // Is this the time the light bounces back? 25 seems to be very near
-        this.lastValue.distance = msg.value;
+        this.setValue({
+          ...value,
+          distance: msg.value
+        });
         break;
       }
       case VisionSensor.MODE_COLOR_RGB: {
         const red = msg.data.readInt16LE(msg.payloadIndex + 0);
         const green = msg.data.readInt16LE(msg.payloadIndex + 2);
         const blue = msg.data.readInt16LE(msg.payloadIndex + 4);
-        this.lastValue = {
+        this.setValue({
           rgb: [red, green, blue]
-        };
+        });
         break;
       }
       case VisionSensor.MODE_COLOR_DISTANCE_FLOAT: {
@@ -44,10 +50,14 @@ class VisionSensor extends Peripheral {
           distance += 1.0 / partial;
         }
 
-        this.lastValue = {
+        value = {
           color,
           distance
         };
+        this.setValue({
+          color,
+          distance
+        });
         break;
       }
       default:

@@ -209,6 +209,7 @@ module.exports = class Hub extends EventEmitter {
         msg.ioMembers
       );
       this.ports.registerFromMessage(msg);
+      this._registerEmitterOnPort(msg.portId);
       if (
         !this.connected &&
         this.ports.builtInDevicesRegistered &&
@@ -241,14 +242,11 @@ module.exports = class Hub extends EventEmitter {
         );
       }
     } else if (msg instanceof PortValueSingleMessage) {
-      this._log("debug", `Got value: ${msg.toString()}`);
+      // this._log("debug", `Got value: ${msg.toString()}`);
       const peripheral = this.ports.get(msg.portId);
       if (peripheral) {
         if (peripheral.receiveValue) {
           peripheral.receiveValue(msg);
-          if (peripheral.emitAs) {
-            this.emit(peripheral.emitAs, peripheral.lastValue);
-          }
         } else {
           this._log(
             "warn",
@@ -287,6 +285,13 @@ module.exports = class Hub extends EventEmitter {
       this._log("warn", `Unknown message ${msg.toString()}`);
     } else {
       this._log("debug", `Unprocessed message ${msg.toString()}`);
+    }
+  }
+
+  _registerEmitterOnPort(portId) {
+    const peripheral = this.ports.get(portId);
+    if (peripheral.emitAs) {
+      peripheral.on("value", value => this.emit(peripheral.emitAs, value));
     }
   }
 

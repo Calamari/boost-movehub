@@ -5,7 +5,6 @@ class CurrentSensor extends Peripheral {
     super(ioType, portId, options);
     this.displayName = "CurrentSensor";
     this.emitAs = "current";
-    this.lastValue = null;
     this.defaultMode = CurrentSensor.MODE_ONE;
   }
 
@@ -17,7 +16,7 @@ class CurrentSensor extends Peripheral {
   receiveValue(msg) {
     // Formula thanks to https://github.com/undera/pylgbst
     const milliampers = (2444 * msg.value) / 4095.0;
-    this.lastValue = milliampers;
+    this.setValue(this.lastValue);
   }
 
   toString() {

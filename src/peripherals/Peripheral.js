@@ -16,10 +16,12 @@ class Peripheral extends EventEmitter {
   constructor(ioType, portId, options = DEFAULT_OPTIONS) {
     super();
     this.displayName = "Peripheral";
+    this.subscriptionActive = false;
     this.ioType = ioType;
     this.portId = portId;
     this.logger = options.logger || {};
     this.isVirtualDevice = options.ioMembers && options.ioMembers.length > 1;
+    this.lastValue = null;
   }
 
   _log(type, ...message) {
@@ -54,9 +56,24 @@ class Peripheral extends EventEmitter {
    * @param {PortInputFormat} msg
    */
   receiveSubscriptionAck(msg) {
+    this.subscriptionActive = msg.notificationEnabled;
     this.emit(msg.notificationEnabled ? "subscribed" : "unsubscribed");
     this._log("debug", "ack", msg.toString());
     this.mode = msg.mode;
+  }
+
+  setValue(value) {
+    this.lastValue = value;
+    this.emit("value", value);
+  }
+
+  async getValueAsync() {
+    if (this.lastValue !== null) {
+      return this.lastValue;
+    }
+    return new Promise(resolve => {
+      this.once("value", resolve);
+    });
   }
 }
 
