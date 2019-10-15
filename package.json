@@ -1,5 +1,5 @@
 {
-  "name": "node-movehub",
+  "name": "boost-movehub",
   "version": "0.1.0",
   "description": "Connects with your Lego Boost Movehub vie Bluetooth Low Energy (BLE).",
   "keywords": [
@@ -14,7 +14,7 @@
     "test": "mocha test/* test/**/*",
     "example": "node examples/test.js"
   },
-  "author": "",
+  "author": "calamari <g.tavonius@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "noble": "^1.9.1"
