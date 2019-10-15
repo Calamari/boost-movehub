@@ -1,11 +1,11 @@
 const Boost = require("./src/Boost");
 
-Boost.Hub = require("./src/Hub");
-Boost.R2D2 = require("./interfaces/R2D2");
+const Hub = require("./src/Hub");
+const R2D2 = require("./src/interfaces/R2D2");
 
-const RgbLed = require("./peripherals/RgbLed");
+const RgbLed = require("./src/peripherals/RgbLed");
 
-Boost.colors = {
+const colors = {
   COLOR_OFF: RgbLed.COLOR_OFF,
   COLOR_PINK: RgbLed.COLOR_PINK,
   COLOR_PURPLE: RgbLed.COLOR_PURPLE,
@@ -19,4 +19,9 @@ Boost.colors = {
   COLOR_WHITE: RgbLed.COLOR_WHITE
 };
 
-module.exports = Boost;
+module.exports = {
+  Boost,
+  Hub,
+  R2D2,
+  colors
+};
