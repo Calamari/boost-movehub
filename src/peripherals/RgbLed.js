@@ -52,7 +52,7 @@ class RgbLed extends Peripheral {
 
   /**
    * Receives and processes message with value from sensor.
-   * @param {PortValueSingleMessage} msg
+   * @param {PortValueSingleMessage} _msg
    */
   receiveValue(_msg) {
     this._log("info", `.receiveValue not implemetned`);

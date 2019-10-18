@@ -16,6 +16,7 @@ class PortInputFormatSetup extends PortInputFormat {
  * Instantiates a proper PortInputFormatSetup to send to Hub
  *
  * @param {number} portId Port ID to subscribe updates for
+ * @param {Object} [options]
  * @param {number} [options.mode]
  * @param {number} [options.deltaInterval] Interval of change the value has to change to trigger update (1 is kind of live data).
  * @param {number} [options.notificationEnabled] Defines if messages should be send back on a regular base.

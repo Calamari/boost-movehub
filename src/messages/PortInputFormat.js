@@ -37,31 +37,6 @@ class PortInputFormat extends DeviceMessage {
   }
 }
 
-/**
- * Instanties a proper PortInputFormat to send to Hub
- *
- * @param {number} actionType
- */
-PortInputFormat.build = function build(portId) {
-  const mode = 0x00;
-  const deltaInterval = 0x01; // TODO: Fiure out: delta of what exactly?
-  const notificationEnabled = 0x01;
-  return new HubAction(
-    Buffer.from([
-      0x0a,
-      0x00,
-      PortInputFormat.TYPE,
-      portId,
-      mode,
-      deltaInterval,
-      0x00,
-      0x00,
-      0x00,
-      notificationEnabled
-    ])
-  );
-};
-
 PortInputFormat.TYPE = 0x47;
 
 module.exports = PortInputFormat;

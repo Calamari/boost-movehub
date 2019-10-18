@@ -28,6 +28,7 @@ class HubAlert extends DeviceMessage {
  * Instantiates a proper HubAlert message to send to Hub
  *
  * @param {number} alertType
+ * @param {number} alertOp One of `HubAlert.OP_*`
  */
 HubAlert.build = function build(alertType, alertOp) {
   return new HubAlert(

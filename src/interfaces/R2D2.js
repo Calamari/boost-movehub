@@ -13,6 +13,7 @@ const EMIT_TO_SENSOR = {
   tilt: MovehubPorts.PORT_TILT,
   voltage: MovehubPorts.PORT_VOLTAGE
 };
+
 /**
  * Interface to work with your R2D2 robot.
  */
@@ -22,6 +23,11 @@ module.exports = class R2D2 {
     this.logger = options.logger || {};
   }
 
+  /**
+   * Register event handlers on specific topics.
+   * @param {string} what Type of event to listen to.
+   * @param {Function} cb Callback method to call when event is happening.
+   */
   async on(what, cb) {
     const portId = EMIT_TO_SENSOR[what];
     if (!portId) {
@@ -33,58 +39,6 @@ module.exports = class R2D2 {
       await this._subscribeTo(sensor);
     }
     return sensor.on(what, cb);
-  }
-
-  get visionSensor() {
-    const sensor = this.hub.ports.get(MovehubPorts.PORT_C);
-
-    return {
-      subscribe: () => {
-        return this._subscribeTo(sensor);
-      },
-      unsubscribe: () => {
-        return this._unsubscribeFrom(sensor);
-      }
-    };
-  }
-
-  get tiltSensor() {
-    const sensor = this.hub.ports.get(MovehubPorts.PORT_TILT);
-
-    return {
-      subscribe: () => {
-        return this._subscribeTo(sensor);
-      },
-      unsubscribe: () => {
-        return this._unsubscribeFrom(sensor);
-      }
-    };
-  }
-
-  get voltageSensor() {
-    const sensor = this.hub.ports.get(MovehubPorts.PORT_VOLTAGE);
-
-    return {
-      subscribe: () => {
-        return this._subscribeTo(sensor);
-      },
-      unsubscribe: () => {
-        return this._unsubscribeFrom(sensor);
-      }
-    };
-  }
-
-  get currentSensor() {
-    const sensor = this.hub.ports.get(MovehubPorts.PORT_CURRENT);
-
-    return {
-      subscribe: () => {
-        return this._subscribeTo(sensor);
-      },
-      unsubscribe: () => {
-        return this._unsubscribeFrom(sensor);
-      }
-    };
   }
 
   get rgbLed() {
