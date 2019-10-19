@@ -5,6 +5,18 @@ const R2D2 = require("./src/interfaces/R2D2");
 
 const RgbLed = require("./src/peripherals/RgbLed");
 
+const DeviceMessage = require("./src/messages/DeviceMessage");
+const GenericError = require("./src/messages/GenericError");
+const HubAction = require("./src/messages/HubAction");
+const HubAlert = require("./src/messages/HubAlert");
+const HubAttachedMessage = require("./src/messages/HubAttachedMessage");
+const PortInputFormat = require("./src/messages/PortInputFormat");
+const PortInputFormatSetup = require("./src/messages/PortInputFormatSetup");
+const PortOutput = require("./src/messages/PortOutput");
+const PortOutputCommandFeedbackMessage = require("./src/messages/PortOutputCommandFeedbackMessage");
+const PortValuleSingleMessage = require("./src/messages/PortValuleSingleMessage");
+const UnknownMessage = require("./src/messages/UnknownMessage");
+
 const colors = {
   COLOR_OFF: RgbLed.COLOR_OFF,
   COLOR_PINK: RgbLed.COLOR_PINK,
@@ -23,5 +35,19 @@ module.exports = {
   Boost,
   Hub,
   R2D2,
+
+  // All the messages
+  DeviceMessage,
+  GenericError,
+  HubAction,
+  HubAlert,
+  HubAttachedMessage,
+  PortInputFormat,
+  PortInputFormatSetup,
+  PortOutput,
+  PortOutputCommandFeedbackMessage,
+  PortValuleSingleMessage,
+  UnknownMessage,
+
   colors
 };
