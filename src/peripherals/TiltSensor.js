@@ -37,31 +37,31 @@ class TiltSensor extends Peripheral {
         break;
       }
       case TiltSensor.MODE_2AXIS_SIMPLE: {
-        console.log("TiltSensor.MODE_2AXIS_SIMPLE is TODO");
+        this._log("warn", "TiltSensor.MODE_2AXIS_SIMPLE is TODO");
         break;
       }
       case TiltSensor.MODE_3AXIS_SIMPLE: {
-        console.log("TiltSensor.MODE_3AXIS_SIMPLE is TODO");
+        this._log("warn", "TiltSensor.MODE_3AXIS_SIMPLE is TODO");
         break;
       }
       case TiltSensor.MODE_IMPACT_COUNT: {
-        console.log("TiltSensor.MODE_IMPACT_COUNT is TODO");
+        this._log("warn", "TiltSensor.MODE_IMPACT_COUNT is TODO");
         break;
       }
       case TiltSensor.MODE_3AXIS_ACCEL: {
-        console.log("TiltSensor.MODE_3AXIS_ACCEL is TODO");
+        this._log("warn", "TiltSensor.MODE_3AXIS_ACCEL is TODO");
         break;
       }
       case TiltSensor.MODE_ORIENT_CF: {
-        console.log("TiltSensor.MODE_ORIENT_CF is TODO");
+        this._log("warn", "TiltSensor.MODE_ORIENT_CF is TODO");
         break;
       }
       case TiltSensor.MODE_IMPACT_CF: {
-        console.log("TiltSensor.MODE_IMPACT_CF is TODO");
+        this._log("warn", "TiltSensor.MODE_IMPACT_CF is TODO");
         break;
       }
       case TiltSensor.MODE_CALIBRATION: {
-        console.log("TiltSensor.MODE_CALIBRATION is TODO");
+        this._log("warn", "TiltSensor.MODE_CALIBRATION is TODO");
         break;
       }
       default:

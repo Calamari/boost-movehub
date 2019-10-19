@@ -125,7 +125,7 @@ module.exports = class Boost extends EventEmitter {
     this.hub.on("disconnect", () => {
       this._log("debug", `Disconnected from hub ${this.hub.uuid}.`);
 
-      console.log("searching for new hub");
+      this._log("debug", "searching for new hub");
       this.startScanning();
     });
   }

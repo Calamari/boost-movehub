@@ -33,7 +33,6 @@ module.exports = class R2D2 {
    */
   async on(what, cb) {
     const portId = EMIT_TO_SENSOR[what];
-    console.log(what, cb, portId);
     if (!portId) {
       this._log("warn", `Don't know on what port to listen for event ${what}`);
       return;
