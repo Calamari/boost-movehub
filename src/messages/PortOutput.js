@@ -31,6 +31,7 @@ class PortOutput extends DeviceMessage {
  * @param {number[] | number} startupCompletionFlags Bitlist containing flags as defined in Startup and Completion Information or array of flags to set (Available flags: `PortOutput.SC_FLAGS`)
  * @param {number} subCommand
  * @param {number[]} payload Bytes of data to send
+ * @returns {PortOutput}
  */
 PortOutput.buildWriteDirectModeData = function buildWriteDirectModeData(
   portId,
@@ -61,6 +62,7 @@ PortOutput.buildWriteDirectModeData = function buildWriteDirectModeData(
  * @param {number[] | number} startupCompletionFlags Bitlist containing flags as defined in Startup and Completion Information or array of flags to set (Available flags: `PortOutput.SC_FLAGS`)
  * @param {number} subCommand
  * @param {number[]} payload Bytes of data to send
+ * @returns {PortOutput}
  */
 PortOutput.build = function build(
   portId,

@@ -21,6 +21,7 @@ class PortInputFormatSetup extends PortInputFormat {
  * @param {number} [options.mode]
  * @param {number} [options.deltaInterval] Interval of change the value has to change to trigger update (1 is kind of live data).
  * @param {number} [options.notificationEnabled] Defines if messages should be send back on a regular base.
+ * @returns {PortInputFormatSetup}
  */
 PortInputFormatSetup.build = function build(portId, options = {}) {
   const mode = options.mode || 0x00;

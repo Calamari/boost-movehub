@@ -6,6 +6,9 @@ const { toHexString } = require("../helpers");
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#message-types
  */
 class DeviceMessage {
+  /**
+   * @param {Buffer} data Received Buffer data.
+   */
   constructor(data) {
     this.data = data;
   }

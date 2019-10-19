@@ -28,6 +28,8 @@ module.exports = class R2D2 {
    *
    * @param {string} what Type of event to listen to.
    * @param {Function} cb Callback method to call when event is happening.
+   *
+   * @returns {Promise<void>}
    */
   async on(what, cb) {
     const portId = EMIT_TO_SENSOR[what];
@@ -46,6 +48,14 @@ module.exports = class R2D2 {
     const led = this.hub.ports.get(MovehubPorts.PORT_LED);
 
     return {
+      /**
+       * Sets color of RGB to given index color.
+       * @method R2D2.rgbLed.setColor
+       *
+       * @param {number} color The index of color to use. (One of `RgbLed.COLOR_*`)
+       *
+       * @returns {Promise<void>}
+       */
       setColor: c => {
         this.hub.sendMessage(led.setColor(c));
         return Promise.resolve();
@@ -57,10 +67,28 @@ module.exports = class R2D2 {
     const motor = this.hub.ports.get(MovehubPorts.PORT_AB);
 
     return {
+      /**
+       * Starts both wheels synchronous using given speed.
+       * @method R2D2.wheels.drive
+       *
+       * @param {number} speed Speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>}
+       */
       drive: speed => {
         this.hub.sendMessage(motor.combinedStartSpeed(speed, speed));
         return Promise.resolve();
       },
+
+      /**
+       * Starts both wheels synchronous using given speed until the traveled the given distance.
+       * @method R2D2.wheels.driveDistance
+       *
+       * @param {number} centimeters Number of centimeters until wheels stop.
+       * @param {number} speed Speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>}
+       */
       driveDistance: (centimeters, speed) => {
         const degrees = centimeters * DEGREES_PER_CM;
         this.hub.sendMessage(
@@ -69,12 +97,29 @@ module.exports = class R2D2 {
         // TODO real promise when finished
         return Promise.resolve();
       },
+
+      /**
+       * Starts both wheels synchronous using given speed for given amount of time.
+       * @method R2D2.wheels.driveTime
+       *
+       * @param {number} time Number of milliseconds until wheels stop.
+       * @param {number} speed Speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>}
+       */
       driveTime: (time, speed) => {
         this.hub.sendMessage(
           motor.combinedStartSpeedForTime(time, speed, speed)
         );
         return promiseTimeout(time);
       },
+
+      /**
+       * Stop both wheels.
+       * @method R2D2.wheels.stop
+       *
+       * @returns {Promise<void>}
+       */
       stop: () => {
         this.hub.sendMessage(motor.combinedStop());
         return Promise.resolve();
@@ -88,6 +133,12 @@ module.exports = class R2D2 {
 
     // TODO: add method that checks if chassis is currenlty open
     return {
+      /**
+       * Resolves telling if the legs are behind the body of R2D2.
+       * @method R2D2.chassis.isOpen
+       *
+       * @returns {Promise<boolean>}
+       */
       isOpen: async () => {
         if (!tiltSensor.subscriptionActive) {
           await this._subscribeTo(tiltSensor);
@@ -95,6 +146,14 @@ module.exports = class R2D2 {
         const { pitch } = await tiltSensor.getValueAsync();
         return pitch >= 179 && pitch <= 181;
       },
+
+      /**
+       * Speeds up the wheels for a short amount of time, so the force will bring
+       * R2D2’s body in front of his legs.
+       * @method R2D2.chassis.open
+       *
+       * @returns {Promise<void>} Resolves when the movement is done.
+       */
       open: () => {
         this.hub.sendMessage(
           motor.combinedStartSpeedForDegrees(
@@ -110,6 +169,13 @@ module.exports = class R2D2 {
           motor.once("stop", resolve);
         });
       },
+
+      /**
+       * TODO: Brings the legs close to R2D2’s body.
+       * @method R2D2.chassis.close
+       *
+       * @returns {Promise<void>} Resolves when the movement is done.
+       */
       close: () => {
         // TODO: this does not work yet
         this.hub.sendMessage(
@@ -139,14 +205,40 @@ module.exports = class R2D2 {
       unsubscribe: () => {
         return this._unsubscribeFrom(sensor);
       },
+
+      /**
+       * Starts turning the head.
+       * @method R2D2.head.turn
+       *
+       * @param {number} speed The speed ranging from -100 to 100 (%). (Clockwise or counter-clockwise)
+       *
+       * @returns {Promise<void>} Resolves immediately.
+       */
       turn: speed => {
         this.hub.sendMessage(head.startSpeed(speed));
         return Promise.resolve();
       },
+
+      /**
+       * Stops turning the head.
+       * @method R2D2.head.stop
+       *
+       * @returns {Promise<void>} Resolves immediately.
+       */
       stop: () => {
         this.hub.sendMessage(head.stop());
         return Promise.resolve();
       },
+
+      /**
+       * Starts turning the head for given amount of degrees.
+       * @method R2D2.head.turnDegrees
+       *
+       * @param {number} degrees The amount of degrees to turn. Can be positive or negative for clockwise and counter-clockwise movement.
+       * @param {number} speed The speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>} Resolves after movement finishes.
+       */
       turnDegrees: (degrees, speed) => {
         // We have to turn the motor more to get the head around 360 degrees
         this.hub.sendMessage(
@@ -156,6 +248,16 @@ module.exports = class R2D2 {
           head.once("stop", resolve);
         });
       },
+
+      /**
+       * Starts turning the head for given amount of milliseconds.
+       * @method R2D2.head.turnTime
+       *
+       * @param {number} time Milliseconds to turn
+       * @param {number} speed The speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>} Resolves after movement finishes.
+       */
       turnTime: (time, speed) => {
         this.hub.sendMessage(head.startSpeedForTime(time, speed));
         return new Promise(resolve => {

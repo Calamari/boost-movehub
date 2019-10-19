@@ -21,7 +21,18 @@ const DEFAULT_OPTIONS = {
 const LEGO_CHARACTERISTIC = "000016241212efde1623785feabcd123";
 
 // TODO: Add different Error classes for different error cases
+/**
+ * Movehub implementation that handles all the sending and receiving of messages
+ * between us and the Movehub device.
+ */
 module.exports = class Hub extends EventEmitter {
+  /**
+   * @param {Object} peripheral The Movehub data received by `noble`.
+   * @param {Object} [options] Some options
+   * @param {boolean} [options.reconnect=true] Set to true if we should try reconnect if connection gets lost.
+   * @param {number[]} [options.neededDevices=[]] PortIds that have to register themselves, bevore the `hubConnected` event is triggered.
+   * @param {Object} [options.logger={}] Logging Interface. Object containing methods like `error`, `info`, `log`, `silly` or `warn`.
+   */
   constructor(peripheral, options = DEFAULT_OPTIONS) {
     super();
     this.peripheral = peripheral;
@@ -33,14 +44,23 @@ module.exports = class Hub extends EventEmitter {
     this.connect();
   }
 
+  /**
+   * MAC Address of connected Movehub.
+   */
   get address() {
     return this.peripheral.address;
   }
 
+  /**
+   * UUID of connected Movehub.
+   */
   get uuid() {
     return this.peripheral.uuid;
   }
 
+  /**
+   * Tries connecting to initialized Movehub.
+   */
   connect() {
     this._log("debug", `Trying to connect to peripheral #${this.uuid}.`);
     this.peripheral.connect(err => {
@@ -61,18 +81,33 @@ module.exports = class Hub extends EventEmitter {
     });
   }
 
+  /**
+   * Sends disconnection signal and disconnects from Movehub.
+   */
   disconnect() {
     this.sendMessage(HubAction.build(HubAction.DISCONNECT));
   }
 
+  /**
+   * Sends SwitchOff signal to Movehub.
+   */
   switchOff() {
     this.sendMessage(HubAction.build(HubAction.SWITCH_OFF_HUB));
   }
 
+  /**
+   * Sends signal to immediately shut down Movehub.
+   */
   immediateShutdown() {
     this.sendMessage(HubAction.build(HubAction.IMMEDIATE_SHUTDOWN));
   }
 
+  /**
+   * Sends given device message to connected Movehub.
+   *
+   * @param {DeviceMessage} msg Message to send.
+   * @param {function} callback
+   */
   sendMessage(msg, callback = null) {
     this._log("debug", "Sending message", msg.toString(), msg.data);
     this.characteristic.write(msg.data, false, (...args) => {
@@ -83,6 +118,7 @@ module.exports = class Hub extends EventEmitter {
 
   /**
    * This subscribes to all or specific Hub Alerts.
+   *
    * @param {number[]} [filter] List of HubAlert to subscribe to. Default are all.
    */
   activateAlerts(filter = null) {
@@ -101,6 +137,7 @@ module.exports = class Hub extends EventEmitter {
 
   /**
    * This unsubscribes from all or specifc Hub Alerts.
+   *
    * @param {number[]} [filter] List of HubAlert to subscribe to. Default are all.
    */
   deactivateAlerts(filter = null) {
@@ -195,6 +232,7 @@ module.exports = class Hub extends EventEmitter {
   }
 
   /**
+   * Called when a Movehub sends a message.
    *
    * @param {DeviceMessage} msg
    */

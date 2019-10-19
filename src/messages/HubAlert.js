@@ -34,6 +34,7 @@ class HubAlert extends DeviceMessage {
  *
  * @param {number} alertType
  * @param {number} alertOp One of `HubAlert.OP_*`
+ * @return {HubAlert}
  */
 HubAlert.build = function build(alertType, alertOp) {
   return new HubAlert(

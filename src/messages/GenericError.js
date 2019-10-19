@@ -6,10 +6,6 @@ const DeviceMessage = require("./DeviceMessage");
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#generic-error-messages
  */
 class GenericError extends DeviceMessage {
-  constructor(data) {
-    this.data = data;
-  }
-
   toString() {
     return "TODO: what part of data is the error?";
   }

@@ -19,6 +19,9 @@ function printableAction(action) {
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-value-single
  */
 class PortOutputCommandFeedbackMessage extends DeviceMessage {
+  /**
+   * Object containing payloads with keys as port IDs.
+   */
   get payload() {
     const payload = Array.from(this.data).slice(
       DeviceMessage.DEFAULT_HEADER_SIZE
@@ -31,6 +34,9 @@ class PortOutputCommandFeedbackMessage extends DeviceMessage {
     }, {});
   }
 
+  /**
+   * Alias for `payload`.
+   */
   get valuesForPorts() {
     return this.payload;
   }
