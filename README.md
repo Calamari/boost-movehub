@@ -1,10 +1,11 @@
-# Boost-Movehub
+# Boost-Movehub [![Build Status](https://travis-ci.org/Calamari/boost-movehub.svg?branch=master)](https://travis-ci.org/Calamari/boost-movehub)
 
 A JavaScript library to control your Lego Boost Movehub appliance.
 
 # Example
 
 ```js
+const { Boost, R2D2 } = require("boost-movehub");
 const boost = new Boost("001653aeb339");
 
 boost.on("hubConnected", async hub => {
