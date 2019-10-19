@@ -12,7 +12,7 @@
   "main": "index.js",
   "scripts": {
     "docs": "documentation build src/** -f html -o docs",
-    "test": "mocha test/* test/**/*",
+    "test": "mocha test/* test/**/* --exit",
     "example": "node examples/test.js"
   },
   "author": "calamari <g.tavonius@gmail.com>",
