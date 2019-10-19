@@ -33,11 +33,12 @@ module.exports = class R2D2 {
    */
   async on(what, cb) {
     const portId = EMIT_TO_SENSOR[what];
+    console.log(what, cb, portId);
     if (!portId) {
       this._log("warn", `Don't know on what port to listen for event ${what}`);
       return;
     }
-    const sensor = this.hub.ports.get(MovehubPorts.PORT_C);
+    const sensor = this.hub.ports.get(portId);
     if (!sensor.subscriptionActive) {
       await this._subscribeTo(sensor);
     }

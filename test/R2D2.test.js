@@ -5,6 +5,8 @@ const Peripheral = require("../src/peripherals/Peripheral");
 const Motor = require("../src/peripherals/Motor");
 const TiltSensor = require("../src/peripherals/TiltSensor");
 const VisionSensor = require("../src/peripherals/VisionSensor");
+const CurrentSensor = require("../src/peripherals/Current");
+const VoltageSensor = require("../src/peripherals/Voltage");
 const MovehubPorts = require("../src/MovehubPorts");
 const PortInputFormatSetup = require("../src/messages/PortInputFormatSetup");
 const Hub = require("../src/Hub");
@@ -26,6 +28,14 @@ describe("R2D2 interface", () => {
     peripheral = stubPeripheral(characteristic);
     hub = new Hub(peripheral);
 
+    hub.ports.registry[MovehubPorts.PORT_VOLTAGE] = PeripheralFactory.create(
+      Peripheral.DEV_VOLTAGE,
+      MovehubPorts.PORT_VOLTAGE
+    );
+    hub.ports.registry[MovehubPorts.PORT_CURRENT] = PeripheralFactory.create(
+      Peripheral.DEV_CURRENT,
+      MovehubPorts.PORT_CURRENT
+    );
     hub.ports.registry[MovehubPorts.PORT_C] = PeripheralFactory.create(
       Peripheral.DEV_VISION_SENSOR,
       MovehubPorts.PORT_C
@@ -41,9 +51,9 @@ describe("R2D2 interface", () => {
     r2d2 = new R2D2(hub);
   });
 
-  describe("has tilt sensor", () => {
-    it("can subscribe to updates", () => {
-      const result = r2d2.tiltSensor.subscribe();
+  describe(".on method", () => {
+    it("can subscribe to tilt sensor updates", () => {
+      const result = r2d2.on("tilt", sinon.spy());
       expect(characteristic.write).to.have.been.calledOnce;
       expect(characteristic.write.getCall(0).args[0]).to.eql(
         new Buffer([
@@ -62,38 +72,38 @@ describe("R2D2 interface", () => {
       expect(result).to.be.instanceOf(Promise);
     });
 
-    it("can unsubscribe from updates", () => {
-      const result = r2d2.tiltSensor.unsubscribe();
-      expect(characteristic.write).to.have.been.calledOnce;
-      expect(characteristic.write.getCall(0).args[0]).to.eql(
-        new Buffer([
-          0x0a,
-          0x00,
-          PortInputFormatSetup.TYPE,
-          MovehubPorts.PORT_TILT,
-          0x00,
-          0x01,
-          0x00,
-          0x00,
-          0x00,
-          PortInputFormatSetup.DISABLE_NOTIFICATONS
-        ])
-      );
-      expect(result).to.be.instanceOf(Promise);
+    ["distance", "color"].forEach(type => {
+      it("can subscribe to vision sensor updates through ${type}", () => {
+        const result = r2d2.on(type, sinon.spy());
+        expect(characteristic.write).to.have.been.calledOnce;
+        expect(characteristic.write.getCall(0).args[0]).to.eql(
+          new Buffer([
+            0x0a,
+            0x00,
+            PortInputFormatSetup.TYPE,
+            MovehubPorts.PORT_C,
+            VisionSensor.MODE_COLOR_DISTANCE_FLOAT,
+            0x01,
+            0x00,
+            0x00,
+            0x00,
+            PortInputFormatSetup.ENABLE_NOTIFICATONS
+          ])
+        );
+        expect(result).to.be.instanceOf(Promise);
+      });
     });
-  });
 
-  describe("has vision sensor", () => {
-    it("can subscribe to updates", () => {
-      const result = r2d2.visionSensor.subscribe();
+    it("can subscribe to voltage sensor updates", () => {
+      const result = r2d2.on("voltage", sinon.spy());
       expect(characteristic.write).to.have.been.calledOnce;
       expect(characteristic.write.getCall(0).args[0]).to.eql(
         new Buffer([
           0x0a,
           0x00,
           PortInputFormatSetup.TYPE,
-          MovehubPorts.PORT_C,
-          VisionSensor.MODE_COLOR_DISTANCE_FLOAT,
+          MovehubPorts.PORT_VOLTAGE,
+          VoltageSensor.MODE_ONE,
           0x01,
           0x00,
           0x00,
@@ -104,21 +114,21 @@ describe("R2D2 interface", () => {
       expect(result).to.be.instanceOf(Promise);
     });
 
-    it("can unsubscribe from updates", () => {
-      const result = r2d2.visionSensor.unsubscribe();
+    it("can subscribe to current sensor updates", () => {
+      const result = r2d2.on("current", sinon.spy());
       expect(characteristic.write).to.have.been.calledOnce;
       expect(characteristic.write.getCall(0).args[0]).to.eql(
         new Buffer([
           0x0a,
           0x00,
           PortInputFormatSetup.TYPE,
-          MovehubPorts.PORT_C,
-          0x00,
+          MovehubPorts.PORT_CURRENT,
+          CurrentSensor.MODE_ONE,
           0x01,
           0x00,
           0x00,
           0x00,
-          PortInputFormatSetup.DISABLE_NOTIFICATONS
+          PortInputFormatSetup.ENABLE_NOTIFICATONS
         ])
       );
       expect(result).to.be.instanceOf(Promise);
@@ -130,7 +140,7 @@ describe("R2D2 interface", () => {
       const result = r2d2.head.turn(90);
       expect(characteristic.write).to.have.been.calledOnce;
       expect(characteristic.write.getCall(0).args[0]).to.eql(
-        new Buffer([0x09, 0x00, 0x81, 0x03, 0x01, 0x07, 0x5a, 0x64, 0x03])
+        new Buffer([0x09, 0x00, 0x81, 0x03, 0x11, 0x07, 0x5a, 0x64, 0x03])
       );
       expect(result).to.be.instanceOf(Promise);
     });
@@ -144,7 +154,7 @@ describe("R2D2 interface", () => {
           0x00,
           0x81,
           0x03,
-          0x01,
+          0x11,
           Motor.SUB_CMD_START_SPEED_FOR_DEGREES,
           0x95, // 90 * 1.66
           0x00,
@@ -169,7 +179,7 @@ describe("R2D2 interface", () => {
           0x00,
           0x81,
           0x03,
-          0x01,
+          0x11,
           Motor.SUB_CMD_START_SPEED_FOR_TIME,
           0xe8,
           0x03,
