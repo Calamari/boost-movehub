@@ -1,6 +1,8 @@
 const { toHexString } = require("../helpers");
 
 /**
+ * Base class for all Messages being send to or received from the MoveHub.
+ *
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#message-types
  */
 class DeviceMessage {

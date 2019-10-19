@@ -14,6 +14,8 @@ function printableAction(action) {
 }
 
 /**
+ * Message that holds values for multiple ports.
+ *
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-value-single
  */
 class PortOutputCommandFeedbackMessage extends DeviceMessage {

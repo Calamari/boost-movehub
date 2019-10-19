@@ -1,6 +1,8 @@
 const DeviceMessage = require("./DeviceMessage");
 
 /**
+ * HubAlert Messages from MoveHub.
+ *
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-alerts
  *
  * TODO: Test receiving them
@@ -10,6 +12,9 @@ class HubAlert extends DeviceMessage {
     return this.data[3];
   }
 
+  /**
+   * Returns string representation of alert type.
+   */
   get alertTypeToString() {
     switch (this.alertType) {
       case HubAlert.LOW_VOLTAGE:

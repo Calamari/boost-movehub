@@ -2,7 +2,8 @@ const DeviceMessage = require("./DeviceMessage");
 const { toHexString } = require("../helpers");
 
 /**
- * Upstream message as answer to PortInputFormatSetup message
+ * Upstream message as answer to `PortInputFormatSetup` message.
+ *
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-input-format-single
  */
 class PortInputFormat extends DeviceMessage {

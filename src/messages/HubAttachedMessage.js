@@ -1,17 +1,21 @@
 const DeviceMessage = require("./DeviceMessage");
 
 /**
- * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-attached-i-o
- * example data: <Buffer 0f 00 04 00 01 27 00 00 00 00 10 00 00 00 10>
+ * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-attached-i-o.
+ *
+ * Example data: <Buffer 0f 00 04 00 01 27 00 00 00 00 10 00 00 00 10>
  */
 class HubAttachedMessage extends DeviceMessage {
   /**
-   * Returns ID of port as defined in Port
+   * ID of port as defined in Port
    */
   get portId() {
     return this.data[3];
   }
 
+  /**
+   * One of `HubAttachedMessage.EVENT_TYPE_*`
+   */
   get eventType() {
     return this.data[4];
   }

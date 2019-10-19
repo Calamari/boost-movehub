@@ -4,7 +4,7 @@ const { toHexString } = require("../helpers");
 /**
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-value-single
  *
- * example:  <Buffer 06 00 45 3a 00 a6>
+ * Example:  <Buffer 06 00 45 3a 00 a6>
  */
 class PortValueSingleMessage extends DeviceMessage {
   get portId() {

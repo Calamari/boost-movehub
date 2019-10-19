@@ -11,6 +11,7 @@
   ],
   "main": "index.js",
   "scripts": {
+    "docs": "documentation build src/** -f html -o docs",
     "test": "mocha test/* test/**/*",
     "example": "node examples/test.js"
   },

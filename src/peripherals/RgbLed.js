@@ -4,7 +4,16 @@ const PortOutput = require("../messages/PortOutput");
 const INDEX_MODE = 0x00;
 const RGB_MODE = 0x01;
 
+/**
+ * Class to set LED colors of the Movehub.
+ */
 class RgbLed extends Peripheral {
+  /**
+   * @param {Number} ioType Peripheral Device Type ID (Should be `Peripheral.DEV_RGB_LIGHT`)
+   * @param {Number} portId Port ID this peripheral is connected to
+   * @param {object} [options.ioMembers] If this has severeal members, it is a virtual device
+   * @param {object} [options.logger]
+   */
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "RgbLed";
@@ -52,6 +61,7 @@ class RgbLed extends Peripheral {
 
   /**
    * Receives and processes message with value from sensor.
+   *
    * @param {PortValueSingleMessage} _msg
    */
   receiveValue(_msg) {

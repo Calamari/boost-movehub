@@ -2,6 +2,7 @@ const DeviceMessage = require("./DeviceMessage");
 
 /**
  * Up- & Downstream messages for control actions on connected Hub.
+ *
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#hub-actions
  */
 class HubAction extends DeviceMessage {

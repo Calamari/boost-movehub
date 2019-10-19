@@ -3,6 +3,7 @@ const { encodeFlags, toHexString } = require("../helpers");
 
 /**
  * Downstream message to make peripherals do something.
+ *
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-output-command
  */
 class PortOutput extends DeviceMessage {

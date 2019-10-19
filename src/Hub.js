@@ -47,8 +47,9 @@ module.exports = class Hub extends EventEmitter {
       if (err) {
         this._log("error", "Could not connect to peripheral.");
         /**
+         * Fires when an error is received when connecting to the Movehub.
          * @event Hub#error
-         * @param error {Error}
+         * @param {Error} error
          */
         this.emit("error", err);
         return;
@@ -120,6 +121,7 @@ module.exports = class Hub extends EventEmitter {
     this.peripheral.on("disconnect", () => {
       this._log("debug", `Peripheral #${this.uuid} disconnected.`);
       /**
+       * Fires when a Movehub gets disconnected.
        * @event Hub#disconnect
        */
       this.emit("disconnect");
@@ -143,8 +145,9 @@ module.exports = class Hub extends EventEmitter {
     this.peripheral.on("rssiUpdate", rssi => {
       if (this.rssi !== rssi) {
         /**
+         * Fires when new RSSI value is received from BLE device.
          * @event Hub#rssi
-         * @param rssi {number}
+         * @param {number} rssi The received RSSI value.
          */
         this.emit("rssi", rssi);
         this.rssi = rssi;
@@ -265,6 +268,7 @@ module.exports = class Hub extends EventEmitter {
       /**
        * Fires on received Hub Alert.
        * @event Hub#hubAlert
+       * @param value {string} String representation of HubAlert that happened.
        */
       this.emit("hubAlert", msg.alertTypeToString());
     } else if (msg instanceof PortOutputCommandFeedbackMessage) {

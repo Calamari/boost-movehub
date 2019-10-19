@@ -6,6 +6,9 @@ const DEFAULT_OPTIONS = {
   logger: {}
 };
 
+/**
+ * This is the base class for all the peripherals of an Movehub.
+ */
 class Peripheral extends EventEmitter {
   /**
    * @param {Number} ioType Peripheral Device Type ID (One of `Peripheral.DEV_*`)
@@ -53,6 +56,7 @@ class Peripheral extends EventEmitter {
 
   /**
    * Handle acknowledge message for prior subscribe or unsubscribe.
+   *
    * @param {PortInputFormat} msg
    */
   receiveSubscriptionAck(msg) {
@@ -62,11 +66,25 @@ class Peripheral extends EventEmitter {
     this.mode = msg.mode;
   }
 
+  /**
+   * Sets the value received by the Hub.
+   *
+   * @param {number} value
+   */
   setValue(value) {
     this.lastValue = value;
+    /**
+     * Fires when a new value is set on a Peripheral.
+     * @event Peripheral#value
+     * @param {number} value
+     */
     this.emit("value", value);
   }
 
+  /**
+   * Async method to get the current value. If no value was received yet,
+   * it waits for a value to be received before resolving.
+   */
   async getValueAsync() {
     if (this.lastValue !== null) {
       return this.lastValue;

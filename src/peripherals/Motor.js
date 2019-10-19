@@ -3,7 +3,16 @@ const PortOutput = require("../messages/PortOutput");
 const PortOutputCommandFeedbackMessage = require("../messages/PortOutputCommandFeedbackMessage");
 const { int16ToArray, int32ToArray } = require("../helpers");
 
+/**
+ * Defines methods for internal and external Methods of a Movehub.
+ */
 class Motor extends Peripheral {
+  /**
+   * @param {Number} ioType Peripheral Device Type ID (Either `Peripheral.DEV_MOTOR`, `Peripheral.DEV_MOTOR_EXTERNAL_TACHO` or `Peripheral.DEV_MOTOR_INTERNAL_TACHO`)
+   * @param {Number} portId Port ID this peripheral is connected to
+   * @param {object} [options.ioMembers] If this has severeal members, it is a virtual device
+   * @param {object} [options.logger]
+   */
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "Motor";
@@ -268,6 +277,7 @@ class Motor extends Peripheral {
 
   /**
    * Receives and processes message with value from sensor.
+   *
    * @param {PortValueSingleMessage} msg
    */
   receiveValue(msg) {

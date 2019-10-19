@@ -3,6 +3,7 @@ const { int32ToArray } = require("../helpers");
 
 /**
  * Downstream message to setup receiving single value sensor updates
+ *
  * As defined in https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#port-input-format-setup-single
  */
 class PortInputFormatSetup extends PortInputFormat {

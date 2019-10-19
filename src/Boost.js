@@ -9,14 +9,14 @@ const DEFAULT_OPTIONS = {
   logger: {}
 };
 
+/**
+ * The Boost instance scans for Boost devices like your movehub.
+ *
+ * @param {string} hubAddressOrUuid The UUID or MAC address of the movehub to connect to.
+ * @param {Object} [options] Some options.
+ * @param {Object} [options.logger] Logger implementation when logging is desired.
+ */
 module.exports = class Boost extends EventEmitter {
-  /**
-   * Boost is scans for Boost devices like your movehub.
-   *
-   * @param {string} hubAddressOrUuid The UUID or MAC address of the movehub to connect to.
-   * @param {Object} [options] Some options.
-   * @param {Object} [options.logger] Logger implementation when logging is desired.
-   */
   constructor(hubAddressOrUuid, options = DEFAULT_OPTIONS) {
     super();
     this.hubAddressOrUuid = hubAddressOrUuid;
@@ -117,7 +117,7 @@ module.exports = class Boost extends EventEmitter {
 
       /**
        * @event Boost#hubConnected
-       * @param hub {Hub} The hub that just connected.
+       * @param {Hub} hub The hub that just connected.
        */
       this.emit("hubConnected", this.hub);
     });

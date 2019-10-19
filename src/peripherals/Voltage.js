@@ -1,6 +1,16 @@
 const Peripheral = require("./Peripheral");
 
+/**
+ * This handles the communication with the internal voltage sensor of Movehub.
+ * The values it produces are in volts.
+ */
 class VoltageSensor extends Peripheral {
+  /**
+   * @param {Number} ioType Peripheral Device Type ID (Should be `Peripheral.DEV_VOLTAGE`)
+   * @param {Number} portId Port ID this peripheral is connected to
+   * @param {object} [options.ioMembers] If this has severeal members, it is a virtual device
+   * @param {object} [options.logger]
+   */
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "VoltageSensor";

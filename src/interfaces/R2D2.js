@@ -25,6 +25,7 @@ module.exports = class R2D2 {
 
   /**
    * Register event handlers on specific topics.
+   *
    * @param {string} what Type of event to listen to.
    * @param {Function} cb Callback method to call when event is happening.
    */

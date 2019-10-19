@@ -1,7 +1,18 @@
 const Peripheral = require("./Peripheral");
 const { toHexString } = require("../helpers");
 
+/**
+ * This handles the communication with the internal tilt sensor of Movehub.
+ * There seem to be different modes implemented in the device. We just made
+ * the one available that simply gets us the `roll` and `pitch` values.
+ */
 class TiltSensor extends Peripheral {
+  /**
+   * @param {Number} ioType Peripheral Device Type ID (Should be `Peripheral.DEV_TILT_SENSOR`)
+   * @param {Number} portId Port ID this peripheral is connected to
+   * @param {object} [options.ioMembers] If this has severeal members, it is a virtual device
+   * @param {object} [options.logger]
+   */
   constructor(ioType, portId, options = undefined) {
     super(ioType, portId, options);
     this.displayName = "TiltSensor";
