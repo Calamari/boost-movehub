@@ -7,6 +7,9 @@ const UnknownPeripheral = require("./peripherals/UnknownPeripheral");
 const VisionSensor = require("./peripherals/VisionSensor");
 const Voltage = require("./peripherals/Voltage");
 
+/**
+ * @class PeripheralFactory
+ */
 module.exports = {
   mapping: {
     [Peripheral.DEV_TILT_INTERNAL]: TiltSensor,

@@ -7,6 +7,9 @@ const PortValueSingle = require("./messages/PortValueSingle");
 const UnknownMessage = require("./messages/UnknownMessage");
 const PortInputFormat = require("./messages/PortInputFormat");
 
+/**
+ * @class MessageFactory
+ */
 module.exports = {
   mapping: {
     [HubAction.TYPE]: HubAction,
@@ -19,7 +22,7 @@ module.exports = {
   },
 
   /**
-   * Creates an instance of a DeviceMessage implementation
+   * Creates an instance of a DeviceMessage.
    *
    * @param {Buffer} data
    * @returns {DeviceMessage | UnknownMessage} Returns an instance of DeviceMessage subclass, or null if message type is unknown to us

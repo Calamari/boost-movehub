@@ -356,11 +356,29 @@
               
                 
                 <li><a
-                  href='#create'
-                  class="">
-                  create
-                  
+                  href='#messagefactory'
+                  class=" toggle-sibling">
+                  MessageFactory
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#messagefactorycreate'
+                        class='regular pre-open'>
+                        .create
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -627,11 +645,81 @@
               
                 
                 <li><a
-                  href='#create'
-                  class="">
-                  create
-                  
+                  href='#movehubports'
+                  class=" toggle-sibling">
+                  MovehubPorts
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#movehubportsregisterfrommessage'
+                        class='regular pre-open'>
+                        #registerFromMessage
+                      </a></li>
+                      
+                      <li><a
+                        href='#movehubportsbuiltindevicesregistered'
+                        class='regular pre-open'>
+                        #builtInDevicesRegistered
+                      </a></li>
+                      
+                      <li><a
+                        href='#movehubportsall'
+                        class='regular pre-open'>
+                        #all
+                      </a></li>
+                      
+                      <li><a
+                        href='#movehubportsget'
+                        class='regular pre-open'>
+                        #get
+                      </a></li>
+                      
+                      <li><a
+                        href='#movehubportscontainsall'
+                        class='regular pre-open'>
+                        #containsAll
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
+                
+                </li>
+              
+                
+                <li><a
+                  href='#peripheralfactory'
+                  class=" toggle-sibling">
+                  PeripheralFactory
+                  <span class='icon'>▸</span>
+                </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  <ul class='list-reset py1-ul pl1'>
+                    <li class='h5'><span>Static members</span></li>
+                    
+                      <li><a
+                        href='#peripheralfactorycreate'
+                        class='regular pre-open'>
+                        .create
+                      </a></li>
+                    
+                    </ul>
+                  
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -3190,15 +3278,53 @@ R2D2’s body in front of his legs.</p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='create'>
-      create
+    <h3 class='fl m0' id='messagefactory'>
+      MessageFactory
     </h3>
     
     
   </div>
   
 
-  <p>Creates an instance of a DeviceMessage implementation</p>
+  
+    <div class='pre p1 fill-light mt0'>new MessageFactory()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='messagefactorycreate'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>create(data)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Creates an instance of a DeviceMessage.</p>
 
     <div class='pre p1 fill-light mt0'>create(data: <a href="https://nodejs.org/api/buffer.html">Buffer</a>): (<a href="#devicemessage">DeviceMessage</a> | UnknownMessage)</div>
   
@@ -3241,6 +3367,20 @@ R2D2’s body in front of his legs.</p>
   
 
   
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
@@ -4680,12 +4820,410 @@ R2D2’s body in front of his legs.</p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='create'>
-      create
+    <h3 class='fl m0' id='movehubports'>
+      MovehubPorts
     </h3>
     
     
   </div>
+  
+
+  <p>Registry for all ports of Movehub.</p>
+
+    <div class='pre p1 fill-light mt0'>new MovehubPorts(options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>?
+            = <code>DEFAULT_OPTIONS</code>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='movehubportsregisterfrommessage'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>registerFromMessage(msg)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Creates and registers a peripheral using the message.</p>
+
+    <div class='pre p1 fill-light mt0'>registerFromMessage(msg: HubAttached)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>msg</span> <code class='quiet'>(HubAttached)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='movehubportsbuiltindevicesregistered'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>builtInDevicesRegistered</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Returns true if all Movehub build-in ports have registered.</p>
+
+    <div class='pre p1 fill-light mt0'>builtInDevicesRegistered</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='movehubportsall'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>all</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Returns all registered <code>Peripheral</code>s.</p>
+
+    <div class='pre p1 fill-light mt0'>all</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='movehubportsget'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>get(portId)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Returns the <code>Peripheral</code> on given port.</p>
+
+    <div class='pre p1 fill-light mt0'>get(portId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>): <a href="#peripheral">Peripheral</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>portId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>)</code>
+	    
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="#peripheral">Peripheral</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='movehubportscontainsall'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>containsAll(portIdList)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Returns true if all port Ifs that are given have been registered.</p>
+
+    <div class='pre p1 fill-light mt0'>containsAll(portIdList: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>portIdList</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a>&#x3C;<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a>>
+            = <code>[]</code>)</code>
+	    List of PortIds that have to be registered.
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></code>:
+        
+
+      
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+
+  
+</section>
+
+          
+        
+          
+          <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+  <div class='clearfix'>
+    
+    <h3 class='fl m0' id='peripheralfactory'>
+      PeripheralFactory
+    </h3>
+    
+    
+  </div>
+  
+
+  
+    <div class='pre p1 fill-light mt0'>new PeripheralFactory()</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Static Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='peripheralfactorycreate'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>create(ioType, portId, options)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>Creates an instance of a Peripheral implementation</p>
@@ -4747,6 +5285,20 @@ R2D2’s body in front of his legs.</p>
   
 
   
+
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
