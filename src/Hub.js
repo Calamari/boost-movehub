@@ -2,10 +2,10 @@ const { EventEmitter } = require("events");
 
 const MessageFactory = require("./MessageFactory");
 const MovehubPorts = require("./MovehubPorts");
-const PortOutputCommandFeedbackMessage = require("./messages/PortOutputCommandFeedbackMessage");
-const HubAttachedMessage = require("./messages/HubAttachedMessage");
+const PortOutputCommandFeedback = require("./messages/PortOutputCommandFeedback");
+const HubAttached = require("./messages/HubAttached");
 const PortInputFormat = require("./messages/PortInputFormat");
-const PortValueSingleMessage = require("./messages/PortValueSingleMessage");
+const PortValueSingle = require("./messages/PortValueSingle");
 const UnknownMessage = require("./messages/UnknownMessage");
 const HubAction = require("./messages/HubAction");
 const HubAlert = require("./messages/HubAlert");
@@ -240,7 +240,7 @@ module.exports = class Hub extends EventEmitter {
     this._log("debug", "Parse data:", msg && msg.data);
 
     // TODO: Add timeout for not registering all needed devices in time.
-    if (msg instanceof HubAttachedMessage) {
+    if (msg instanceof HubAttached) {
       this._log(
         "debug",
         "Message:",
@@ -282,7 +282,7 @@ module.exports = class Hub extends EventEmitter {
           msg.toString()
         );
       }
-    } else if (msg instanceof PortValueSingleMessage) {
+    } else if (msg instanceof PortValueSingle) {
       // this._log("debug", `Got value: ${msg.toString()}`);
       const peripheral = this.ports.get(msg.portId);
       if (peripheral) {
@@ -309,7 +309,7 @@ module.exports = class Hub extends EventEmitter {
        * @param value {string} String representation of HubAlert that happened.
        */
       this.emit("hubAlert", msg.alertTypeToString());
-    } else if (msg instanceof PortOutputCommandFeedbackMessage) {
+    } else if (msg instanceof PortOutputCommandFeedback) {
       this._log("info", "Got feedback:", msg.toString());
       const data = msg.valuesForPorts;
       Object.keys(data).forEach(portId => {

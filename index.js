@@ -9,12 +9,12 @@ const DeviceMessage = require("./src/messages/DeviceMessage");
 const GenericError = require("./src/messages/GenericError");
 const HubAction = require("./src/messages/HubAction");
 const HubAlert = require("./src/messages/HubAlert");
-const HubAttachedMessage = require("./src/messages/HubAttachedMessage");
+const HubAttached = require("./src/messages/HubAttached");
 const PortInputFormat = require("./src/messages/PortInputFormat");
 const PortInputFormatSetup = require("./src/messages/PortInputFormatSetup");
 const PortOutput = require("./src/messages/PortOutput");
-const PortOutputCommandFeedbackMessage = require("./src/messages/PortOutputCommandFeedbackMessage");
-const PortValuleSingleMessage = require("./src/messages/PortValuleSingleMessage");
+const PortOutputCommandFeedback = require("./src/messages/PortOutputCommandFeedback");
+const PortValuleSingle = require("./src/messages/PortValuleSingle");
 const UnknownMessage = require("./src/messages/UnknownMessage");
 
 const colors = {
@@ -41,12 +41,12 @@ module.exports = {
   GenericError,
   HubAction,
   HubAlert,
-  HubAttachedMessage,
+  HubAttached,
   PortInputFormat,
   PortInputFormatSetup,
   PortOutput,
-  PortOutputCommandFeedbackMessage,
-  PortValuleSingleMessage,
+  PortOutputCommandFeedback,
+  PortValuleSingle,
   UnknownMessage,
 
   colors

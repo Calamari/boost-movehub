@@ -1,6 +1,6 @@
 const Peripheral = require("./Peripheral");
 const PortOutput = require("../messages/PortOutput");
-const PortOutputCommandFeedbackMessage = require("../messages/PortOutputCommandFeedbackMessage");
+const PortOutputCommandFeedback = require("../messages/PortOutputCommandFeedback");
 const { int16ToArray, int32ToArray } = require("../helpers");
 
 /**
@@ -287,12 +287,12 @@ class Motor extends Peripheral {
   /**
    * Called with feedback from Hub.
    *
-   * @param {number} value One of `PortOutputCommandFeedbackMessage.ACTION_*`
+   * @param {number} value One of `PortOutputCommandFeedback.ACTION_*`
    */
   receiveCommandFeedback(value) {
     this._log("debug", "Motor feedback", value);
     switch (value) {
-      case PortOutputCommandFeedbackMessage.ACTION_START:
+      case PortOutputCommandFeedback.ACTION_START:
         this.status = Motor.RUNNING;
         /**
          * Fires when Motor starts running.
@@ -300,7 +300,7 @@ class Motor extends Peripheral {
          */
         this.emit("start");
         break;
-      case PortOutputCommandFeedbackMessage.ACTION_STOP:
+      case PortOutputCommandFeedback.ACTION_STOP:
         this.status = Motor.STOPPED;
         /**
          * Fires when Motor finished running.

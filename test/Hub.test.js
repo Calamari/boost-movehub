@@ -1,11 +1,10 @@
 const chai = require("chai");
-const sinon = require("sinon");
 const sinonChai = require("sinon-chai");
 const Peripheral = require("../src/peripherals/Peripheral");
 const TiltSensor = require("../src/peripherals/TiltSensor");
 const Motor = require("../src/peripherals/Motor");
 const Hub = require("../src/Hub");
-const HubAttachedMessage = require("../src/messages/HubAttachedMessage");
+const HubAttached = require("../src/messages/HubAttached");
 const stubCharacteristic = require("./support/stubCharacteristic");
 const stubPeripheral = require("./support/stubPeripheral");
 const expect = chai.expect;
@@ -39,9 +38,9 @@ describe("Hub", () => {
         const msg = Buffer.from([
           0x0f,
           0x00,
-          HubAttachedMessage.TYPE,
+          HubAttached.TYPE,
           portId,
-          HubAttachedMessage.EVENT_TYPE_ATTACHED_IO,
+          HubAttached.EVENT_TYPE_ATTACHED_IO,
           Peripheral.DEV_MOTOR_EXTERNAL_TACHO,
           0x00,
           0x00,
@@ -64,9 +63,9 @@ describe("Hub", () => {
         const msg = Buffer.from([
           0x0f,
           0x00,
-          HubAttachedMessage.TYPE,
+          HubAttached.TYPE,
           portId,
-          HubAttachedMessage.EVENT_TYPE_ATTACHED_IO,
+          HubAttached.EVENT_TYPE_ATTACHED_IO,
           Peripheral.DEV_TILT_INTERNAL,
           0x00,
           0x00,
