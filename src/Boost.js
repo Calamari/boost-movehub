@@ -11,12 +11,13 @@ const DEFAULT_OPTIONS = {
 
 /**
  * The Boost instance scans for Boost devices like your movehub.
- *
- * @param {string} hubAddressOrUuid The UUID or MAC address of the movehub to connect to.
- * @param {Object} [options] Some options.
- * @param {Object} [options.logger] Logger implementation when logging is desired.
  */
 module.exports = class Boost extends EventEmitter {
+  /**
+   * @param {string} hubAddressOrUuid The UUID or MAC address of the movehub to connect to.
+   * @param {Object} [options] Some options.
+   * @param {Object} [options.logger] Logger implementation when logging is desired.
+   */
   constructor(hubAddressOrUuid, options = DEFAULT_OPTIONS) {
     super();
     this.hubAddressOrUuid = hubAddressOrUuid;
@@ -72,7 +73,6 @@ module.exports = class Boost extends EventEmitter {
    * @param {Object} peripheral Peripheral data found by noble.
    */
   onDiscover(peripheral) {
-    // this._log('debug', peripheral)
     this._log(
       "debug",
       "Discovered",
@@ -124,8 +124,6 @@ module.exports = class Boost extends EventEmitter {
 
     this.hub.on("disconnect", () => {
       this._log("debug", `Disconnected from hub ${this.hub.uuid}.`);
-
-      this._log("debug", "searching for new hub");
       this.startScanning();
     });
   }
