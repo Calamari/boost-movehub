@@ -37,22 +37,28 @@ boost.on("hubConnected", async hub => {
     // r2.wheels.driveTime(1200, -10);
     // });
     // r2.wheels.driveDistance(10, 10);
-    const isOpen = await r2.chassis.isOpen();
-    if (isOpen) {
-      await r2.rgbLed.setColor(COLOR_GREEN);
-    } else {
-      // await r2.chassis.open();
-      await r2.rgbLed.setColor(COLOR_YELLOW);
-    }
+    // const isOpen = await r2.chassis.isOpen();
+    // if (isOpen) {
+    //   await r2.rgbLed.setColor(COLOR_GREEN);
+    // } else {
+    //   // await r2.chassis.open();
+    //   await r2.rgbLed.setColor(COLOR_YELLOW);
+    // }
 
-    await r2.wheels.drive(30);
+    // r2.wheels.subscribe();
+    r2.on("traveled", (cm, speed) => {
+      console.log("traveled", cm, "cm", "=", speed, "cm/s");
+    });
+
+    await r2.wheels.drive(100);
     r2.on("distance", async distance => {
       if (distance < 6) {
         await r2.wheels.driveDistance(20, 30);
       }
     });
 
-    // await waitFor(500);
+    await waitFor(1500);
+    await r2.wheels.stop();
     // r2.visionSensor.unsubscribe();
     // await r2.head.turnDegrees(30, 40);
     // await r2.head.turnTime(350, -30);

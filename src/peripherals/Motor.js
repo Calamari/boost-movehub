@@ -281,7 +281,8 @@ class Motor extends Peripheral {
    * @param {PortValueSingleMessage} msg
    */
   receiveValue(msg) {
-    this._log("info", `received value`, msg.value, "on port", msg.portId);
+    this._log("debug", `received value`, msg.value, "on port", msg.portId);
+    this.setValue(msg.data.readInt16LE(msg.payloadIndex + 0));
   }
 
   /**

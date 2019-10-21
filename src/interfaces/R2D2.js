@@ -14,13 +14,28 @@ const EMIT_TO_SENSOR = {
   voltage: MovehubPorts.PORT_VOLTAGE
 };
 
+const SPEED_AVERAGE_WINDOW = 5;
+
 /**
  * Interface to work with your R2D2 robot.
  */
 module.exports = class R2D2 {
+  /**
+   * @param {Hub} hub An instance of Hub class.
+   * @param {Object} [options]
+   * @param {Object} [options.logger] Logger implementation when logging is desired.
+   */
   constructor(hub, options = {}) {
     this.hub = hub;
     this.logger = options.logger || {};
+    this._degreesTraveled = 0;
+    this._lastSpeeds = new Int32Array(SPEED_AVERAGE_WINDOW);
+    this._lastSpeedTimes = new Int32Array(SPEED_AVERAGE_WINDOW);
+    this._lastSpeedsIndex = 0;
+    /**
+     * @property {number} speed Current speed in cm/s
+     */
+    this.currentSpeed = 0;
   }
 
   /**
@@ -32,6 +47,14 @@ module.exports = class R2D2 {
    * @returns {Promise<void>}
    */
   async on(what, cb) {
+    /**
+     * @event R2D2#traveled
+     * @params {number} cm Centimeters traveled since last update.
+     * @params {number} cmps Current measured cm/s.
+     */
+    if (what === "traveled") {
+      return this.onTraveled(cb);
+    }
     const portId = EMIT_TO_SENSOR[what];
     if (!portId) {
       this._log("warn", `Don't know on what port to listen for event ${what}`);
@@ -41,7 +64,36 @@ module.exports = class R2D2 {
     if (!sensor.subscriptionActive) {
       await this._subscribeTo(sensor);
     }
-    return sensor.on(what, cb);
+    sensor.on(what, cb);
+  }
+
+  async onTraveled(cb) {
+    const motor = this.hub.ports.get(MovehubPorts.PORT_AB);
+    if (!motor.subscriptionActive) {
+      await this._subscribeTo(motor);
+    }
+
+    this._lastTravelUpdateAt = new Date();
+    for (let i = SPEED_AVERAGE_WINDOW; i--; ) {
+      this._lastSpeedTimes[i] = new Date().getTime();
+    }
+    // Avarage it out, like Frames per second
+    motor.on("value", degrees => {
+      const deltaDegrees = degrees - this._lastSpeeds[this._lastSpeedsIndex];
+      const cmsTraveled = deltaDegrees / DEGREES_PER_CM;
+      const now = new Date().getTime();
+      const timeDelta = now - this._lastSpeedTimes[this._lastSpeedsIndex];
+
+      this.currentSpeed = (cmsTraveled * 1000) / timeDelta;
+
+      this._lastSpeeds[this._lastSpeedsIndex] = degrees;
+      this._lastSpeedTimes[this._lastSpeedsIndex] = now;
+      this._lastSpeedsIndex += 1;
+      if (this._lastSpeedsIndex === SPEED_AVERAGE_WINDOW) {
+        this._lastSpeedsIndex = 0;
+      }
+      cb(cmsTraveled, this.currentSpeed);
+    });
   }
 
   get rgbLed() {
@@ -199,13 +251,6 @@ module.exports = class R2D2 {
     const head = this.hub.ports.get(MovehubPorts.PORT_D);
 
     return {
-      subscribe: () => {
-        return this._subscribeTo(sensor);
-      },
-      unsubscribe: () => {
-        return this._unsubscribeFrom(sensor);
-      },
-
       /**
        * Starts turning the head.
        * @method R2D2.head.turn
