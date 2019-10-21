@@ -243,7 +243,7 @@ module.exports = class Hub extends EventEmitter {
     if (msg instanceof HubAttached) {
       this._log(
         "debug",
-        "Message:",
+        "HubAttached with values:",
         msg.portId,
         msg.eventType,
         msg.ioType,
