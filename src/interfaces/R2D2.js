@@ -9,11 +9,37 @@ const DEGREES_PER_CM = 360 / WHEEL_PERIMETER;
 const HEAD_TURN_MULTI = 1.66;
 
 const EMIT_TO_SENSOR = {
+  /**
+   * @event R2D2#color
+   * @params {number} color Index of color the sensor sees.
+   */
   color: MovehubPorts.PORT_C,
+  /**
+   * @event R2D2#current
+   * @params {number} current The current in milliamperes.
+   */
   current: MovehubPorts.PORT_CURRENT,
+  /**
+   * @event R2D2#distance
+   * @params {number} distance Distance measured in inches.
+   */
   distance: MovehubPorts.PORT_C,
+  /**
+   * @event R2D2#tilt
+   * @params {object} tilt
+   * @params {number} tilt.pitch Pitch value.
+   * @params {number} tilt.roll Roll value.
+   */
   tilt: MovehubPorts.PORT_TILT,
+  /**
+   * @event R2D2#voltage
+   * @params {number} voltage The current in volts.
+   */
   voltage: MovehubPorts.PORT_VOLTAGE,
+  /**
+   * @event R2D2#headTurn
+   * @params {number} degrees Degrees the head is turned in difference from starting position.
+   */
   headTurn: [MovehubPorts.PORT_D, "value", "processHeadTurned"]
 };
 
