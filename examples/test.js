@@ -54,17 +54,19 @@ boost.on("hubConnected", async hub => {
       console.log("headTurn", degrees);
     });
 
-    await r2.wheels.drive(100);
-    r2.on("distance", async distance => {
-      if (distance < 6) {
-        await r2.wheels.driveDistance(20, 30);
-      }
-    });
+    await r2.wheels.turnRight(90, 20);
+    await r2.wheels.turnLeft(90, 20);
+    // await r2.wheels.drive(100);
+    // r2.on("distance", async distance => {
+    //   if (distance < 6) {
+    //     await r2.wheels.driveDistance(20, 30);
+    //   }
+    // });
 
-    await waitFor(1500);
-    await r2.wheels.stop();
-    // r2.visionSensor.unsubscribe();
-    await r2.head.turnDegrees(360, 40);
+    // await waitFor(1500);
+    // await r2.wheels.stop();
+    // // r2.visionSensor.unsubscribe();
+    // await r2.head.turnDegrees(360, 40);
     // await r2.head.turnTime(350, -30);
     // await r2.rgbLed.setColor(4);
     // hub.startMotorAB(15, 15);

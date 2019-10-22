@@ -6,7 +6,9 @@ const { promiseTimeout } = require("../helpers");
 const WHEEL_PERIMETER = 11;
 const DEGREES_PER_CM = 360 / WHEEL_PERIMETER;
 
+// Those are created by experimenting
 const HEAD_TURN_MULTI = 1.66;
+const MOTOR_TURN_MULTI = 1.7;
 
 const EMIT_TO_SENSOR = {
   /**
@@ -210,6 +212,50 @@ module.exports = class R2D2 {
         );
         return promiseTimeout(time);
       },
+
+      /**
+       * Starts both wheels synchronous in different direction to turn for given amount of degrees.
+       * @method R2D2.wheels.turn
+       *
+       * @param {number} degrees The number of degrees to turn. Positive goes clockwise, negative counter-clockwise.
+       * @param {number} speed Speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>}
+       */
+      turn: (degrees, speed) => this.wheels.turnRight(-degrees, speed),
+
+      /**
+       * Starts both wheels synchronous in different direction to turn for given amount of degrees.
+       * @method R2D2.wheels.turnRight
+       *
+       * @param {number} degrees The number of degrees to turn.
+       * @param {number} speed Speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>}
+       */
+      turnRight: (degrees, speed) => {
+        this.hub.sendMessage(
+          motor.combinedStartSpeedForDegrees(
+            Math.round(MOTOR_TURN_MULTI * degrees),
+            speed,
+            -speed
+          )
+        );
+        return new Promise(resolve => {
+          motor.once("stop", resolve);
+        });
+      },
+
+      /**
+       * Starts both wheels synchronous in different direction to turn for given amount of degrees.
+       * @method R2D2.wheels.turnLeft
+       *
+       * @param {number} degrees The number of degrees to turn.
+       * @param {number} speed Speed ranging from 0 to 100 (%).
+       *
+       * @returns {Promise<void>}
+       */
+      turnLeft: (degrees, speed) => this.wheels.turnRight(-degrees, speed),
 
       /**
        * Stop both wheels.
