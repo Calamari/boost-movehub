@@ -6,12 +6,15 @@ const { promiseTimeout } = require("../helpers");
 const WHEEL_PERIMETER = 11;
 const DEGREES_PER_CM = 360 / WHEEL_PERIMETER;
 
+const HEAD_TURN_MULTI = 1.66;
+
 const EMIT_TO_SENSOR = {
   color: MovehubPorts.PORT_C,
   current: MovehubPorts.PORT_CURRENT,
   distance: MovehubPorts.PORT_C,
   tilt: MovehubPorts.PORT_TILT,
-  voltage: MovehubPorts.PORT_VOLTAGE
+  voltage: MovehubPorts.PORT_VOLTAGE,
+  headTurn: [MovehubPorts.PORT_D, "value", "processHeadTurned"]
 };
 
 const SPEED_AVERAGE_WINDOW = 5;
@@ -55,7 +58,13 @@ module.exports = class R2D2 {
     if (what === "traveled") {
       return this.onTraveled(cb);
     }
-    const portId = EMIT_TO_SENSOR[what];
+    let portId = EMIT_TO_SENSOR[what];
+    let processor;
+    if (typeof portId !== "number") {
+      processor = portId[2];
+      what = portId[1];
+      portId = portId[0];
+    }
     if (!portId) {
       this._log("warn", `Don't know on what port to listen for event ${what}`);
       return;
@@ -64,7 +73,13 @@ module.exports = class R2D2 {
     if (!sensor.subscriptionActive) {
       await this._subscribeTo(sensor);
     }
-    sensor.on(what, cb);
+    if (processor) {
+      sensor.on(what, value => {
+        cb(...this[processor](value));
+      });
+    } else {
+      sensor.on(what, cb);
+    }
   }
 
   async onTraveled(cb) {
@@ -94,6 +109,10 @@ module.exports = class R2D2 {
       }
       cb(cmsTraveled, this.currentSpeed);
     });
+  }
+
+  processHeadTurned(value) {
+    return [value / HEAD_TURN_MULTI];
   }
 
   get rgbLed() {
@@ -287,7 +306,10 @@ module.exports = class R2D2 {
       turnDegrees: (degrees, speed) => {
         // We have to turn the motor more to get the head around 360 degrees
         this.hub.sendMessage(
-          head.startSpeedForDegrees(Math.round(1.66 * degrees), speed)
+          head.startSpeedForDegrees(
+            Math.round(HEAD_TURN_MULTI * degrees),
+            speed
+          )
         );
         return new Promise(resolve => {
           head.once("stop", resolve);
