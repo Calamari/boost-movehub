@@ -46,7 +46,7 @@ boost.on("hubConnected", async hub => {
     // }
 
     // r2.wheels.subscribe();
-    r2.on("traveled", (cm, speed) => {
+    r2.on("travel", (cm, speed) => {
       console.log("traveled", cm, "cm", "=", speed, "cm/s");
     });
 

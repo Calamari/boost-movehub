@@ -51,12 +51,12 @@ module.exports = class R2D2 {
    */
   async on(what, cb) {
     /**
-     * @event R2D2#traveled
+     * @event R2D2#travel
      * @params {number} cm Centimeters traveled since last update.
      * @params {number} cmps Current measured cm/s.
      */
-    if (what === "traveled") {
-      return this.onTraveled(cb);
+    if (what === "travel") {
+      return this.onTravel(cb);
     }
     let portId = EMIT_TO_SENSOR[what];
     let processor;
@@ -82,7 +82,7 @@ module.exports = class R2D2 {
     }
   }
 
-  async onTraveled(cb) {
+  async onTravel(cb) {
     const motor = this.hub.ports.get(MovehubPorts.PORT_AB);
     if (!motor.subscriptionActive) {
       await this._subscribeTo(motor);
