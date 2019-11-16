@@ -14,7 +14,7 @@ const PortInputFormat = require("./src/messages/PortInputFormat");
 const PortInputFormatSetup = require("./src/messages/PortInputFormatSetup");
 const PortOutput = require("./src/messages/PortOutput");
 const PortOutputCommandFeedback = require("./src/messages/PortOutputCommandFeedback");
-const PortValuleSingle = require("./src/messages/PortValuleSingle");
+const PortValueSingle = require("./src/messages/PortValueSingle");
 const UnknownMessage = require("./src/messages/UnknownMessage");
 
 const colors = {
@@ -46,7 +46,7 @@ module.exports = {
   PortInputFormatSetup,
   PortOutput,
   PortOutputCommandFeedback,
-  PortValuleSingle,
+  PortValueSingle,
   UnknownMessage,
 
   colors
