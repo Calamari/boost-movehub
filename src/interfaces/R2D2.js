@@ -31,7 +31,7 @@ const EMIT_TO_SENSOR = {
   current: MovehubPorts.PORT_CURRENT,
   /**
    * @event R2D2#distance
-   * @params {number} distance Distance measured in inches.
+   * @params {number} distance Distance measured in inches by distance sensor.
    */
   distance: MovehubPorts.PORT_C,
   /**
@@ -100,13 +100,15 @@ module.exports = class R2D2 {
       return;
     }
     if (typeof EMIT_TO_SENSOR[what] === "number") {
-      this._on(what, EMIT_TO_SENSOR[what], cb);
+      await this._on(what, EMIT_TO_SENSOR[what], cb);
     } else {
       const config = EMIT_TO_SENSOR[what];
       if (Array.isArray(config)) {
-        config.forEach(c => this._on(what, c, cb));
+        for (let i = 0; i < config.length; ++i) {
+          await this._on(what, config[i], cb);
+        }
       } else {
-        this._on(what, config, cb);
+        await this._on(what, config, cb);
       }
     }
   }
