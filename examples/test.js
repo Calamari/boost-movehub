@@ -46,15 +46,23 @@ boost.on("hubConnected", async hub => {
     // }
 
     // r2.wheels.subscribe();
-    r2.on("travel", (cm, speed) => {
-      console.log("traveled", cm, "cm", "=", speed, "cm/s");
+    // r2.on("travel", (cm, speed) => {
+    //   console.log("traveled", cm, "cm", "=", speed, "cm/s");
+    // });
+
+    // r2.on("headTurn", degrees => {
+    //   console.log("headTurn", degrees);
+    // });
+
+    r2.on("turn", val => {
+      console.log("turn", val);
     });
 
-    r2.on("headTurn", degrees => {
-      console.log("headTurn", degrees);
-    });
-
-    await r2.wheels.turnRight(90, 20);
+    // await r2.wheels.turnRight(360, 60);
+    // await waitFor(500);
+    // await r2.wheels.turnRight(360, 60);
+    // hub.sendMessage(hub.ports.get(0).startSpeedForDegrees(100, 20));
+    // hub.sendMessage(hub.ports.get(1).startSpeedForDegrees(-100, 20));
     await r2.wheels.turnLeft(90, 20);
     // await r2.wheels.drive(100);
     // r2.on("distance", async distance => {
@@ -67,7 +75,8 @@ boost.on("hubConnected", async hub => {
     // await r2.wheels.stop();
     // // r2.visionSensor.unsubscribe();
     // await r2.head.turnDegrees(360, 40);
-    // await r2.head.turnTime(350, -30);
+    // await r2.head.turnDegrees(10, -80);
+    // await r2.head.turnDegrees(90, 80);
     // await r2.rgbLed.setColor(4);
     // hub.startMotorAB(15, 15);
     // hub.led(COLOR_RED);

@@ -12,6 +12,14 @@ const MOTOR_TURN_MULTI = 1.7;
 
 const EMIT_TO_SENSOR = {
   /**
+   * @event R2D2#turn
+   * @params {number} degrees Degrees R2D2 has turned. (Positive is to the left.)
+   */
+  turn: [
+    [MovehubPorts.PORT_A, "value", "processLeftMotor"],
+    [MovehubPorts.PORT_B, "value", "processRightMotor"]
+  ],
+  /**
    * @event R2D2#color
    * @params {number} color Index of color the sensor sees.
    */
@@ -63,6 +71,7 @@ module.exports = class R2D2 {
     this._lastSpeeds = new Int32Array(SPEED_AVERAGE_WINDOW);
     this._lastSpeedTimes = new Int32Array(SPEED_AVERAGE_WINDOW);
     this._lastSpeedsIndex = 0;
+    this._motorDegrees = [0, 0];
     /**
      * @property {number} speed Current speed in cm/s
      */
@@ -86,16 +95,29 @@ module.exports = class R2D2 {
     if (what === "travel") {
       return this.onTravel(cb);
     }
-    let portId = EMIT_TO_SENSOR[what];
-    let processor;
-    if (typeof portId !== "number") {
-      processor = portId[2];
-      what = portId[1];
-      portId = portId[0];
-    }
-    if (!portId) {
+    if (EMIT_TO_SENSOR[what] === null) {
       this._log("warn", `Don't know on what port to listen for event ${what}`);
       return;
+    }
+    if (typeof EMIT_TO_SENSOR[what] === "number") {
+      this._on(what, EMIT_TO_SENSOR[what], cb);
+    } else {
+      const config = EMIT_TO_SENSOR[what];
+      if (Array.isArray(config)) {
+        config.forEach(c => this._on(what, c, cb));
+      } else {
+        this._on(what, config, cb);
+      }
+    }
+  }
+
+  async _on(what, portIdOrConfig, cb) {
+    let portId = portIdOrConfig;
+    let processor;
+    if (typeof portIdOrConfig !== "number") {
+      processor = portIdOrConfig[2];
+      what = portIdOrConfig[1];
+      portId = portIdOrConfig[0];
     }
     const sensor = this.hub.ports.get(portId);
     if (!sensor.subscriptionActive) {
@@ -103,7 +125,7 @@ module.exports = class R2D2 {
     }
     if (processor) {
       sensor.on(what, value => {
-        cb(...this[processor](value));
+        this[processor](value, cb);
       });
     } else {
       sensor.on(what, cb);
@@ -139,8 +161,23 @@ module.exports = class R2D2 {
     });
   }
 
-  processHeadTurned(value) {
-    return [value / HEAD_TURN_MULTI];
+  processHeadTurned(value, cb) {
+    cb(value / HEAD_TURN_MULTI);
+  }
+
+  processLeftMotor(value, cb) {
+    this._motorDegrees[0] = value;
+    this.onOrientationChange(cb);
+  }
+
+  processRightMotor(value, cb) {
+    this._motorDegrees[1] = value;
+    this.onOrientationChange(cb);
+  }
+
+  onOrientationChange(cb) {
+    const dir = this._motorDegrees[0] > this._motorDegrees[1] ? 1 : -1;
+    cb(Math.round(this._motorDegrees[0] / MOTOR_TURN_MULTI) * dir);
   }
 
   get rgbLed() {
